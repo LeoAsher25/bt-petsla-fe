@@ -1,0 +1,65 @@
+{
+  "title": {
+    "homepage": "Trang chủ",
+    "shop": "Cửa hàng",
+    "category": "Danh mục",
+    "account": "Tài khoản",
+    "cart": "Giỏ hàng",
+    "login": "Đăng nhập",
+    "logout": "Đăng xuất",
+    "register": "Đăng ký",
+    "profile": "Hồ sơ",
+    "forgotPassword": "Quên mật khẩu",
+    "resetPassword": "Khôi phục mật khẩu",
+    "toggleTheme": "Đổi theme",
+    "item": "Sản phẩm",
+    "view": "Xem",
+    "checkout": "Thanh toán",
+    "quantity": "Số lượng",
+    "totalPrice": "Thành tiền",
+    "apply": "Áp dụng",
+    "page": "Trang",
+    "contact": "Liên hệ"
+  },
+  "label": {
+    "firstName": "Tên",
+    "lastName": "Họ",
+    "fullname": "Họ và tên",
+    "username": "Tên đăng nhập",
+    "password": "Mật khẩu",
+    "phoneNumber": "Số điện thoại",
+    "address": "Địa chỉ",
+    "gender": {
+      "title": "Giới tính",
+      "male": "Nam",
+      "female": "Nữ",
+      "other": "Khác"
+    },
+    "rememberPassword": "Nhớ mật khẩu",
+    "voucher": "Mã giảm giá",
+    "note": "Chú ý",
+    "search": "Tìm kiếm"
+  },
+  "message": {
+    "error": {
+      "empty": "không được để trống"
+    },
+    "warning": {
+      "loginFirst": "Bạn cần đăng nhập trước!",
+      "noProduct": "Không có sản phẩm nào!",
+      "noOrder": "Bạn chưa đặt đơn hàng nào!",
+      "noProductInCart": "Không có sản phẩm nào trong giỏ hàng!"
+    },
+    "success": {
+      "login": "Đăng nhập thành công!",
+      "logout": "Đăng xuất thành công!",
+      "register": "Đăng ký thành công!",
+      "addToCart": "Thêm vào giỏ hàng thành công!",
+      "checkout": "Đặt hàng thành công!"
+    }
+  },
+  "languageTitle": {
+    "vn": "Tiếng Việt",
+    "en": "Tiếng Anh"
+  }
+}

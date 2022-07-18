@@ -1,0 +1,23 @@
+@import 'src/variable.scss';
+
+.top-cart {
+  .top-cart-header {
+    border-bottom: 1px solid rgba(170, 170, 170, 0.6);
+    display: flex;
+
+    .top-cart-title {
+      font-weight: 600;
+      padding: toRem(6) 0 toRem(4);
+    }
+  }
+
+  .top-cart-footer {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+
+    .top-cart-btn {
+      margin: toRem(6);
+    }
+  }
+}
