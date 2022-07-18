@@ -1,39 +1,39 @@
-import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
-import { Container, Form } from 'react-bootstrap';
-import { useSearchParams } from 'react-router-dom';
-import CustomPagination from 'src/components/customComponents/CustomPagination';
-import Loading from 'src/components/Loading';
-import ProductList from 'src/components/ProductList';
-import { getAllProductMethod } from 'src/services/product/productAction';
-import { RootState } from 'src/stores/rootReducer';
-import { ERequestStatus } from 'src/types/commonType';
-import { IProduct } from 'src/types/productTypes';
+import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { Container, Form } from "react-bootstrap";
+import { useSearchParams } from "react-router-dom";
+import CustomPagination from "src/components/customComponents/CustomPagination";
+import Loading from "src/components/Loading";
+import ProductList from "src/components/ProductList";
+import { getAllProductMethod } from "src/services/product/productAction";
+import { RootState } from "src/stores/rootReducer";
+import { ERequestStatus } from "src/types/commonType";
+import { IProduct } from "src/types/productTypes";
 import {
   useAppDispatch,
   useAppSelector,
-} from 'src/utils/hook.ts/customReduxHook';
-import './ProductsPage.scss';
+} from "src/utils/hook.ts/customReduxHook";
+import "./ProductsPage.scss";
 
 const sortList = [
   {
     value: 0,
-    displayName: 'Relevance',
+    displayName: "Relevance",
   },
   {
     value: 1,
-    displayName: 'Name: A-Z',
+    displayName: "Name: A-Z",
   },
   {
     value: 2,
-    displayName: 'Name: Z-A',
+    displayName: "Name: Z-A",
   },
   {
     value: 3,
-    displayName: 'Price: Low to High',
+    displayName: "Price: Low to High",
   },
   {
     value: 4,
-    displayName: 'Price: High to Low',
+    displayName: "Price: High to Low",
   },
 ];
 
@@ -61,7 +61,7 @@ const ProductsPage = () => {
     productList.filter((product: IProduct) =>
       product.product_name
         .toLowerCase()
-        .includes((searchParams.get('search') || '').toLowerCase())
+        .includes((searchParams.get("search") || "").toLowerCase())
     )
   );
 
@@ -88,7 +88,7 @@ const ProductsPage = () => {
         tempProductList = productList.filter((product: IProduct) =>
           product.product_name
             .toLowerCase()
-            .includes((searchParams.get('search') || '').toLowerCase())
+            .includes((searchParams.get("search") || "").toLowerCase())
         );
         break;
       }
@@ -118,7 +118,7 @@ const ProductsPage = () => {
       }
     }
     return tempProductList;
-  }, [currentSort, productList, searchParams]);
+  }, [currentSort, productList, searchParams, filteredProductList]);
 
   useEffect(() => {
     setFilteredProductList([...handleSort()]);
@@ -133,43 +133,45 @@ const ProductsPage = () => {
       productList.filter((product: IProduct) =>
         product.product_name
           .toLowerCase()
-          .includes((searchParams.get('search') || '').toLowerCase())
+          .includes((searchParams.get("search") || "").toLowerCase())
       )
     );
   }, [searchParams, productList]);
 
   return (
-    <div className='product-page'>
+    <div className="product-page">
       {requestStatus === ERequestStatus.PENDING && <Loading />}
       <Container>
         <div
-          className='product-page-header shadow-sm rounded'
-          style={{ backgroundColor: style.backgroundColor }}>
-          <div className='header-wrap'>
-            {searchParams.get('search') && (
-              <div className='search-results-wrap'>
-                <div className='title'>{`Search for "${searchParams.get(
-                  'search'
+          className="product-page-header shadow-sm rounded"
+          style={{ backgroundColor: style.backgroundColor }}
+        >
+          <div className="header-wrap">
+            {searchParams.get("search") && (
+              <div className="search-results-wrap">
+                <div className="title">{`Search for "${searchParams.get(
+                  "search"
                 )}"`}</div>
-                <div className='value'>
+                <div className="value">
                   {`${filteredProductList.length} results found`}
                 </div>
               </div>
             )}
 
-            <div className='sort-wrap'>
-              <Form.Group className='sort-select-gr'>
-                <Form.Label className='label' htmlFor='sort-by'>
-                  Sort by:{' '}
+            <div className="sort-wrap">
+              <Form.Group className="sort-select-gr">
+                <Form.Label className="label" htmlFor="sort-by">
+                  Sort by:{" "}
                 </Form.Label>
                 <Form.Select
                   value={currentSort}
                   onChange={handleSortSelectChange}
-                  id='sort-by'
+                  id="sort-by"
                   style={{
                     backgroundColor: style.backgroundColor,
                     color: style.color,
-                  }}>
+                  }}
+                >
                   {sortList.map((sortItem) => (
                     <option key={sortItem.value} value={sortItem.value}>
                       {sortItem.displayName}
