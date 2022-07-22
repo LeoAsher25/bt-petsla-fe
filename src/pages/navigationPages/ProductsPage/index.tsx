@@ -81,7 +81,7 @@ const ProductsPage = () => {
     setCurrentSort(Number(event.target.value));
   };
 
-  const handleSort = useCallback(() => {
+  const handleSort = () => {
     let tempProductList = [...filteredProductList];
     switch (currentSort) {
       case 0: {
@@ -118,11 +118,11 @@ const ProductsPage = () => {
       }
     }
     return tempProductList;
-  }, [currentSort, productList, searchParams, filteredProductList]);
+  };
 
   useEffect(() => {
     setFilteredProductList([...handleSort()]);
-  }, [currentSort, handleSort]);
+  }, [currentSort]);
 
   useEffect(() => {
     setTotalPage(Math.ceil(filteredProductList.length / itemsPerPage));
