@@ -1,15 +1,15 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import { AxiosError } from 'axios';
-import { userApiMethod } from 'src/api/apiMethods';
-import { ILoginResponseError } from 'src/types/authTypes';
-import { IRequestedOrder } from 'src/types/productTypes';
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
+import { userApiMethod } from "src/api/apiMethods";
+import { ILoginResponseError } from "src/types/authTypes";
+import { IRequestedOrder } from "src/types/productTypes";
 
 export const getUserInfoMethod = createAsyncThunk(
-  'user/getUserInfoMethod',
+  "user/getUserInfoMethod",
   async (_, thunkApi) => {
     try {
       const response = await userApiMethod.getUserInfo();
-      console.log('get profile', response);
+      console.log("get profile", response);
       return response.data;
     } catch (err) {
       const error = err as AxiosError<ILoginResponseError>;
@@ -19,11 +19,11 @@ export const getUserInfoMethod = createAsyncThunk(
 );
 
 export const addOrderMethod = createAsyncThunk(
-  'user/addOrderMethod',
+  "user/addOrderMethod",
   async (order: IRequestedOrder, thunkApi) => {
     try {
       const response = await userApiMethod.addOrder(order);
-      console.log('add order', response);
+      console.log("add order", response);
       return response.data;
     } catch (err) {
       const error = err as AxiosError<ILoginResponseError>;
@@ -33,11 +33,11 @@ export const addOrderMethod = createAsyncThunk(
 );
 
 export const getAllOrderMethod = createAsyncThunk(
-  'user/getAllOrderMethod',
+  "user/getAllOrderMethod",
   async (_, thunkApi) => {
     try {
       const response = await userApiMethod.getAllOrder();
-      console.log('get all order', response.data);
+      console.log("get all order", response.data);
       return response.data;
     } catch (err) {
       const error = err as AxiosError<ILoginResponseError>;
@@ -47,10 +47,10 @@ export const getAllOrderMethod = createAsyncThunk(
 );
 
 export const getOneOrderMethod = createAsyncThunk(
-  'user/getOneOrderMethod',
-  async (id: number, thunkApi) => {
+  "user/getOneOrderMethod",
+  async (id: number | string, thunkApi) => {
     try {
-      const response = await userApiMethod.getOneOrder(id); 
+      const response = await userApiMethod.getOneOrder(id);
       return response.data;
     } catch (err) {
       const error = err as AxiosError<ILoginResponseError>;

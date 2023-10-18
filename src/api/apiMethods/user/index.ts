@@ -1,13 +1,13 @@
-import axiosInstance from 'src/api/axisInstance';
-import { IRequestedOrder } from 'src/types/productTypes';
-import { getLocalStorage } from 'src/utils/localStorage';
+import axiosInstance from "src/api/axisInstance";
+import { IRequestedOrder } from "src/types/productTypes";
+import { getLocalStorage } from "src/utils/localStorage";
 
 const userApiMethod = {
   getUserInfo: () => {
-    const url = '/profile';
+    const url = "/profile";
     return axiosInstance.get(url, {
       headers: {
-        Authorization: 'Bearer ' + getLocalStorage('token'),
+        Authorization: "Bearer " + getLocalStorage("token"),
       },
     });
   },
@@ -16,25 +16,25 @@ const userApiMethod = {
     const url = `/add-order/`;
     return axiosInstance.post(url, order, {
       headers: {
-        Authorization: 'Bearer ' + getLocalStorage('token'),
+        Authorization: "Bearer " + getLocalStorage("token"),
       },
     });
   },
 
   getAllOrder: () => {
-    const url = '/get-order';
+    const url = "/get-order";
     return axiosInstance.get(url, {
       headers: {
-        Authorization: 'Bearer ' + getLocalStorage('token'),
+        Authorization: "Bearer " + getLocalStorage("token"),
       },
     });
   },
 
-  getOneOrder: (id: number) => {
+  getOneOrder: (id: number | string) => {
     const url = `order/${id}`;
     return axiosInstance.get(url, {
       headers: {
-        Authorization: 'Bearer ' + getLocalStorage('token'),
+        Authorization: "Bearer " + getLocalStorage("token"),
       },
     });
   },

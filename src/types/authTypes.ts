@@ -22,7 +22,7 @@ export interface IRegisterFormData {
 export interface ILoginResponseData {
   refresh: string;
   access: string;
-  id: number;
+  id: number | string;
   username: string;
   email: string;
   name: string;

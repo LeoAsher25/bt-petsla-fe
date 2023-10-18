@@ -1,22 +1,22 @@
-import React from 'react';
-import { Button, Offcanvas } from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import NoItems from 'src/components/NoItems';
-import TopCartItem from 'src/components/TopCartItem';
+import React from "react";
+import { Button, Offcanvas } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import NoItems from "src/components/NoItems";
+import TopCartItem from "src/components/TopCartItem";
 import {
   handleMinus,
   handlePlus,
   removeFromCart,
-} from 'src/services/product/productSlice';
-import { RootState } from 'src/stores/rootReducer';
-import { ERouterPath } from 'src/types/route';
+} from "src/services/product/productSlice";
+import { RootState } from "src/stores/rootReducer";
+import { ERouterPath } from "src/types/route";
 import {
   useAppDispatch,
   useAppSelector,
-} from 'src/utils/hook.ts/customReduxHook';
-import './TopCart.scss';
+} from "src/utils/hook.ts/customReduxHook";
+import "./TopCart.scss";
 
 interface ITopCartProps {
   showCart: boolean;
@@ -35,15 +35,15 @@ const TopCart = ({ showCart, handleCloseTopCart }: ITopCartProps) => {
   const { token } = authState;
 
   const dispatch = useAppDispatch();
-  const handlePlusToCart = (id: number) => {
+  const handlePlusToCart = (id: number | string) => {
     dispatch(handlePlus(id));
   };
 
-  const handleMinusToCart = (id: number) => {
+  const handleMinusToCart = (id: number | string) => {
     dispatch(handleMinus(id));
   };
 
-  const handleRemoveFromCart = (id: number) => {
+  const handleRemoveFromCart = (id: number | string) => {
     dispatch(removeFromCart(id));
   };
 
@@ -53,9 +53,9 @@ const TopCart = ({ showCart, handleCloseTopCart }: ITopCartProps) => {
 
   const handleCheckoutClick = () => {
     if (!token) {
-      toast.warning(t('message.warning.loginFirst'));
+      toast.warning(t("message.warning.loginFirst"));
     } else if (cartList.length <= 0) {
-      toast.warning(t('message.warning.noProductInCart'));
+      toast.warning(t("message.warning.noProductInCart"));
     } else {
       navigate(ERouterPath.CUSTOMER_INFO);
     }
@@ -63,27 +63,27 @@ const TopCart = ({ showCart, handleCloseTopCart }: ITopCartProps) => {
 
   return (
     <Offcanvas
-      className='top-cart'
+      className="top-cart"
       show={showCart}
       onHide={handleCloseTopCart}
-      placement='end'
+      placement="end"
       style={{ backgroundColor: style.backgroundColor, color: style.color }}>
       <Offcanvas.Header
-        className='top-cart-header'
+        className="top-cart-header"
         closeButton
-        closeVariant={isLightTheme ? undefined : 'white'}>
-        <Offcanvas.Title className='top-cart-title'>
-          {`${t('title.cart')}: ${totalInCart.quantity} ${t('title.item')}`}
+        closeVariant={isLightTheme ? undefined : "white"}>
+        <Offcanvas.Title className="top-cart-title">
+          {`${t("title.cart")}: ${totalInCart.quantity} ${t("title.item")}`}
         </Offcanvas.Title>
       </Offcanvas.Header>
 
       <Offcanvas.Body style={{ padding: 0 }}>
         {cartList.length === 0 ? (
-          <NoItems message={t('message.warning.noProductInCart')} />
+          <NoItems message={t("message.warning.noProductInCart")} />
         ) : (
           cartList.map((product) => (
             <TopCartItem
-              key={product.id}
+              key={product._id}
               isLightTheme={isLightTheme}
               product={product}
               handlePlusToCart={handlePlusToCart}
@@ -94,16 +94,16 @@ const TopCart = ({ showCart, handleCloseTopCart }: ITopCartProps) => {
         )}
       </Offcanvas.Body>
 
-      <div className='top-cart-footer'>
+      <div className="top-cart-footer">
         <Button
-          className='top-cart-btn custom-btn'
+          className="top-cart-btn custom-btn"
           onClick={handleCheckoutClick}>
-          {`${t('title.checkout')} (${totalInCart.price.toLocaleString()}đ)`}
+          {`${t("title.checkout")} (${totalInCart.price.toLocaleString()}đ)`}
         </Button>
         <Button
-          className='top-cart-btn custom-btn bg-fill'
+          className="top-cart-btn custom-btn bg-fill"
           onClick={handleViewCartClick}>
-          {`${t('title.view')} ${t('title.cart')}`}
+          {`${t("title.view")} ${t("title.cart")}`}
         </Button>
       </div>
     </Offcanvas>

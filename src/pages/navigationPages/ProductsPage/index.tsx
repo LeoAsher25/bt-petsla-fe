@@ -55,11 +55,9 @@ const ProductsPage = () => {
   const [itemsPerPage, setItemsPerPage] = useState(12);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // let filteredProductList = ;
-
   const [filteredProductList, setFilteredProductList] = useState(
     productList.filter((product: IProduct) =>
-      product.product_name
+      product.name
         .toLowerCase()
         .includes((searchParams.get("search") || "").toLowerCase())
     )
@@ -86,7 +84,7 @@ const ProductsPage = () => {
     switch (currentSort) {
       case 0: {
         tempProductList = productList.filter((product: IProduct) =>
-          product.product_name
+          product.name
             .toLowerCase()
             .includes((searchParams.get("search") || "").toLowerCase())
         );
@@ -94,16 +92,12 @@ const ProductsPage = () => {
       }
 
       case 1: {
-        tempProductList.sort((p1, p2) =>
-          p1.product_name.localeCompare(p2.product_name)
-        );
+        tempProductList.sort((p1, p2) => p1.name.localeCompare(p2.name));
         break;
       }
 
       case 2: {
-        tempProductList.sort((p1, p2) =>
-          p2.product_name.localeCompare(p1.product_name)
-        );
+        tempProductList.sort((p1, p2) => p2.name.localeCompare(p1.name));
         break;
       }
 
@@ -131,7 +125,7 @@ const ProductsPage = () => {
   useEffect(() => {
     setFilteredProductList(
       productList.filter((product: IProduct) =>
-        product.product_name
+        product.name
           .toLowerCase()
           .includes((searchParams.get("search") || "").toLowerCase())
       )
@@ -144,8 +138,7 @@ const ProductsPage = () => {
       <Container>
         <div
           className="product-page-header shadow-sm rounded"
-          style={{ backgroundColor: style.backgroundColor }}
-        >
+          style={{ backgroundColor: style.backgroundColor }}>
           <div className="header-wrap">
             {searchParams.get("search") && (
               <div className="search-results-wrap">
@@ -170,8 +163,7 @@ const ProductsPage = () => {
                   style={{
                     backgroundColor: style.backgroundColor,
                     color: style.color,
-                  }}
-                >
+                  }}>
                   {sortList.map((sortItem) => (
                     <option key={sortItem.value} value={sortItem.value}>
                       {sortItem.displayName}

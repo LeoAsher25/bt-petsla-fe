@@ -1,27 +1,28 @@
 export interface IProduct {
-  id: number;
-  category: number;
-  created_date: string;
+  _id: number | string;
+  idReadable?: string;
+  name: string;
   description: string;
-  images: string;
-  modified_date: string;
   price: number;
-  product_name: string;
+  image: string;
   stock: number;
+  created_at: string;
+  updated_at: string;
+  categories: Object[];
 }
 
 export interface ICartProduct {
-  id: number;
-  product_name: string;
-  images: string;
+  _id: number | string;
+  name: string;
+  image: string;
   price: number;
   quantity: number;
-  created_date: string;
-  modified_date: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface IOrderProduct {
-  product_id: number;
+  product_id: number | string;
   quantity: number;
   price: number;
 }
@@ -40,7 +41,7 @@ export interface IOrder {
   address: string;
   created_at: string | null;
   delivered_at: string | null;
-  id: number;
+  id: number | string;
   is_delivered: boolean;
   is_paid: boolean;
   note?: string;
@@ -52,7 +53,7 @@ export interface IOrder {
 }
 
 export interface IOrderItem {
-  id: number;
+  _id: number | string;
   name: string;
   quantity: number;
   price: string;

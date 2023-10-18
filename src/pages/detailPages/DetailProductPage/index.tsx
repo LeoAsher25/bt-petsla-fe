@@ -1,26 +1,27 @@
-import React, { useEffect } from 'react';
-import { Button, Col, Container, Row } from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import Loading from 'src/components/Loading';
-import { setLoginModalIsOpen } from 'src/services/modal/modalSlice';
-import { getOneProductMethod } from 'src/services/product/productAction';
+import React, { useEffect } from "react";
+import { Button, Col, Container, Row } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import Loading from "src/components/Loading";
+import { setLoginModalIsOpen } from "src/services/modal/modalSlice";
+import { getOneProductMethod } from "src/services/product/productAction";
 import {
   addToCart,
   resetCurrentProduct,
-} from 'src/services/product/productSlice';
-import { RootState } from 'src/stores/rootReducer';
-import { ERequestStatus } from 'src/types/commonType';
-import { ICartProduct } from 'src/types/productTypes';
-import { ERouterPath } from 'src/types/route';
+} from "src/services/product/productSlice";
+import { RootState } from "src/stores/rootReducer";
+import { ERequestStatus } from "src/types/commonType";
+import { ICartProduct } from "src/types/productTypes";
+import { ERouterPath } from "src/types/route";
 import {
   useAppDispatch,
   useAppSelector,
-} from 'src/utils/hook.ts/customReduxHook';
-import Media from 'src/utils/Media';
-import './DetailProductPage.scss';
+} from "src/utils/hook.ts/customReduxHook";
+import Media from "src/utils/Media";
+import "./DetailProductPage.scss";
+import getFullPathMedia from "src/utils/Media/getFullPathMedia";
 
 const DetailProductPage = () => {
   const { id } = useParams();
@@ -38,23 +39,23 @@ const DetailProductPage = () => {
   // handle add to cart click
   function handleAddToCartClick() {
     const newCartProduct: ICartProduct = {
-      id: currentProduct.id,
-      product_name: currentProduct.product_name,
-      images: currentProduct.images,
-      created_date: currentProduct.created_date,
-      modified_date: currentProduct.modified_date,
+      _id: currentProduct._id,
+      name: currentProduct.name,
+      image: currentProduct.image,
+      created_at: currentProduct.created_at,
+      updated_at: currentProduct.updated_at,
       price: currentProduct.price,
       quantity: 1,
     };
     dispatch(addToCart(newCartProduct));
-    toast.success(t('message.success.addToCart'));
+    toast.success(t("message.success.addToCart"));
   }
 
   const handleBuyNowOnClick = () => {
     if (token) {
-      toast.success(t('message.success.checkout'));
+      toast.success(t("message.success.checkout"));
     } else {
-      toast.warn(t('message.warning.loginFirst'));
+      toast.warn(t("message.warning.loginFirst"));
       dispatch(setLoginModalIsOpen(true));
     }
   };
@@ -71,50 +72,49 @@ const DetailProductPage = () => {
 
   return (
     <div
-      className='product-detail-page'
+      className="product-detail-page"
       style={{ backgroundColor: style.backgroundColor, color: style.color }}>
       {requestStatus === ERequestStatus.PENDING && <Loading />}
-      <Container className='product-detail'>
+      <Container className="product-detail">
         <Row>
-          <Col md='6'>
-            <div className='product-img__wrap'>
+          <Col md="6">
+            <div className="product-img__wrap">
               <img
                 src={
-                  process.env.REACT_APP_BASE_URL + currentProduct.images ||
-                  Media.errorLoading
+                  getFullPathMedia(currentProduct.image) || Media.errorLoading
                 }
-                alt=''
+                alt=""
               />
             </div>
           </Col>
 
-          <Col md='6'>
-            <div className='product-detail-infor'>
-              <h2 className='product-title'>{currentProduct.product_name}</h2>
-              <div className='product-price'>
+          <Col md="6">
+            <div className="product-detail-infor">
+              <h2 className="product-title">{currentProduct.name}</h2>
+              <div className="product-price">
                 <span>{currentProduct.price.toLocaleString()}đ</span>
               </div>
 
-              <div className='btn-wrap'>
+              <div className="btn-wrap">
                 <Button
-                  className='btn-item custom-btn '
+                  className="btn-item custom-btn "
                   onClick={() => handleBuyNowOnClick()}>
-                  <span className=''>Buy Now</span>
+                  <span className="">Buy Now</span>
                 </Button>
                 <Button
-                  className='btn-item custom-btn bg-fill'
+                  className="btn-item custom-btn bg-fill"
                   onClick={() => handleAddToCartClick()}>
-                  <span className=''>Add to Cart</span>
+                  <span className="">Add to Cart</span>
                 </Button>
               </div>
 
               <div
-                className='product-desc'
+                className="product-desc"
                 style={{ borderColor: style.borderColor }}>
-                <h3 className='product-desc-title'>Thông tin sản phẩm</h3>
+                <h3 className="product-desc-title">Thông tin sản phẩm</h3>
                 {/* <span className="detail">{currentProduct.description}</span> */}
                 <div
-                  className='detail'
+                  className="detail"
                   dangerouslySetInnerHTML={{
                     __html: currentProduct.description,
                   }}></div>

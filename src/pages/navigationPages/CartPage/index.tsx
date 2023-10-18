@@ -1,4 +1,4 @@
-import React, { FormEvent } from 'react';
+import React, { FormEvent } from "react";
 import {
   Button,
   Card,
@@ -7,26 +7,26 @@ import {
   Form,
   FormGroup,
   Row,
-} from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import CheckoutSteps from 'src/pages/checkoutStepPages/components/CheckoutSteps';
-import NoItems from 'src/components/NoItems';
-import TopCartItem from 'src/components/TopCartItem';
+} from "react-bootstrap";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import CheckoutSteps from "src/pages/checkoutStepPages/components/CheckoutSteps";
+import NoItems from "src/components/NoItems";
+import TopCartItem from "src/components/TopCartItem";
 import {
   handleMinus,
   handlePlus,
   removeFromCart,
-} from 'src/services/product/productSlice';
-import { RootState } from 'src/stores/rootReducer';
-import { ICartProduct } from 'src/types/productTypes';
-import { ERouterPath } from 'src/types/route';
+} from "src/services/product/productSlice";
+import { RootState } from "src/stores/rootReducer";
+import { ICartProduct } from "src/types/productTypes";
+import { ERouterPath } from "src/types/route";
 import {
   useAppDispatch,
   useAppSelector,
-} from 'src/utils/hook.ts/customReduxHook';
-import './CartPage.scss';
+} from "src/utils/hook.ts/customReduxHook";
+import "./CartPage.scss";
 
 const CartPage = () => {
   const { productState, themeState, authState } = useAppSelector(
@@ -41,15 +41,15 @@ const CartPage = () => {
   const navigate = useNavigate();
 
   const dispatch = useAppDispatch();
-  const handlePlusToCart = (id: number) => {
+  const handlePlusToCart = (id: number | string) => {
     dispatch(handlePlus(id));
   };
 
-  const handleMinusToCart = (id: number) => {
+  const handleMinusToCart = (id: number | string) => {
     dispatch(handleMinus(id));
   };
 
-  const handleRemoveFromCart = (id: number) => {
+  const handleRemoveFromCart = (id: number | string) => {
     dispatch(removeFromCart(id));
   };
 
@@ -59,9 +59,9 @@ const CartPage = () => {
 
   const handleCheckoutClick = () => {
     if (!token) {
-      toast.warning(t('message.warning.loginFirst'));
+      toast.warning(t("message.warning.loginFirst"));
     } else if (cartList.length <= 0) {
-      toast.warning(t('message.warning.noProductInCart'));
+      toast.warning(t("message.warning.noProductInCart"));
     } else {
       // dispatch(setCheckoutModalIsOpen(true));
       navigate(ERouterPath.CUSTOMER_INFO);
@@ -69,29 +69,29 @@ const CartPage = () => {
   };
 
   return (
-    <div className='cart-page'>
-      <Container className='cart-page-container'>
+    <div className="cart-page">
+      <Container className="cart-page-container">
         <Row>
           <CheckoutSteps pathname={ERouterPath.CART} />
         </Row>
 
         <Row>
-          <Col xs='12' md='7' lg='8'>
+          <Col xs="12" md="7" lg="8">
             <Card style={{ backgroundColor: style.backgroundColor }}>
-              <Card.Header className='cart-page-header'>Cart</Card.Header>
+              <Card.Header className="cart-page-header">Cart</Card.Header>
               <Card.Body>
                 {cartList.length === 0 ? (
-                  <NoItems message={t('message.warning.noProductInCart')} />
+                  <NoItems message={t("message.warning.noProductInCart")} />
                 ) : (
                   <Card
                     style={{
                       backgroundColor: style.backgroundColor,
                       // color: style.color,
                     }}>
-                    <div className='cart-page-list'>
+                    <div className="cart-page-list">
                       {cartList.map((product: ICartProduct) => (
                         <TopCartItem
-                          key={product.id}
+                          key={product._id}
                           isLightTheme={isLightTheme}
                           product={product}
                           handlePlusToCart={handlePlusToCart}
@@ -105,35 +105,35 @@ const CartPage = () => {
               </Card.Body>
             </Card>
           </Col>
-          <Col xs='12' md='5' lg='4'>
+          <Col xs="12" md="5" lg="4">
             <Card
               style={{
                 backgroundColor: style.backgroundColor,
                 // color: style.color,
               }}>
-              <div className='cart-page-content'>
-                <div className='header'>
-                  <div className='header-wrap'>
-                    <span className='total-title'>{`${t(
-                      'title.quantity'
+              <div className="cart-page-content">
+                <div className="header">
+                  <div className="header-wrap">
+                    <span className="total-title">{`${t(
+                      "title.quantity"
                     )}:`}</span>
-                    <span className='total-value'>
-                      {`${totalInCart.quantity} ${t('title.item')}`}
+                    <span className="total-value">
+                      {`${totalInCart.quantity} ${t("title.item")}`}
                     </span>
                   </div>
 
-                  <div className='header-wrap'>
-                    <span className='total-title'>{`${t(
-                      'title.totalPrice'
+                  <div className="header-wrap">
+                    <span className="total-title">{`${t(
+                      "title.totalPrice"
                     )}:`}</span>
-                    <span className='total-value'>
+                    <span className="total-value">
                       {`${totalInCart.price.toLocaleString()}đ`}
                     </span>
                   </div>
                 </div>
 
-                <div className='body'>
-                  <div className='voucher-wrap'>
+                <div className="body">
+                  <div className="voucher-wrap">
                     <Form onSubmit={handleApplyVoucherClick}>
                       <FormGroup>
                         <Form.Control
@@ -141,14 +141,14 @@ const CartPage = () => {
                             backgroundColor: style.backgroundColor1,
                             color: style.color,
                           }}
-                          type='text'
-                          placeholder={`${t('label.voucher')}`}
-                          id='cart-page-voucher'
+                          type="text"
+                          placeholder={`${t("label.voucher")}`}
+                          id="cart-page-voucher"
                         />
                       </FormGroup>
-                      <Button className='cart-page-btn custom-btn'>
-                        {`${t('title.apply')} ${t(
-                          'label.voucher'
+                      <Button className="cart-page-btn custom-btn">
+                        {`${t("title.apply")} ${t(
+                          "label.voucher"
                         ).toLowerCase()}`}
                       </Button>
                     </Form>
@@ -156,9 +156,9 @@ const CartPage = () => {
                 </div>
 
                 <Button
-                  className='cart-page-btn checkout-btn custom-btn bg-fill'
+                  className="cart-page-btn checkout-btn custom-btn bg-fill"
                   onClick={handleCheckoutClick}>
-                  {t('title.checkout')}
+                  {t("title.checkout")}
                 </Button>
               </div>
             </Card>

@@ -1,10 +1,10 @@
-import { AxiosError } from 'axios';
-import { productApiMethod } from 'src/api/apiMethods/';
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import { ILoginResponseError } from 'src/types/authTypes';
+import { AxiosError } from "axios";
+import { productApiMethod } from "src/api/apiMethods/";
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { ILoginResponseError } from "src/types/authTypes";
 
 export const getAllProductMethod = createAsyncThunk(
-  'product/getAllProductMethod',
+  "product/getAllProductMethod",
   async (_, thunkApi) => {
     try {
       const response = await productApiMethod.getAll();
@@ -17,8 +17,8 @@ export const getAllProductMethod = createAsyncThunk(
 );
 
 export const getOneProductMethod = createAsyncThunk(
-  'product/getOneProductMethod',
-  async (id: string, thunkApi) => {
+  "product/getOneProductMethod",
+  async (id: number | string, thunkApi) => {
     try {
       const response = await productApiMethod.getOne(id);
       return response;

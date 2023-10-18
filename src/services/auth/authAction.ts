@@ -1,28 +1,29 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import { AxiosError } from 'axios';
-import { authApiMethod } from 'src/api/apiMethods';
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
+import { authApiMethod } from "src/api/apiMethods";
+import repositories from "src/api/repositories";
 import {
   setCurrentCustomerInfo,
   setCurrentUser,
-} from 'src/services/user/userSlice';
+} from "src/services/user/userSlice";
 import {
   ILoginRequestData,
   ILoginResponseError,
   IOrderInfo,
   IRegisterRequestData,
   IUser,
-} from 'src/types/authTypes';
+} from "src/types/authTypes";
 
 export const loginMethod = createAsyncThunk(
-  'auth/loginMethod',
+  "auth/loginMethod",
   async (data: ILoginRequestData, thunkApi) => {
     try {
-      const response = await authApiMethod.login(data);
+      const response = await repositories.auth.post(data, "login");
       const currentOrderInfo: IOrderInfo = {
         id: response.data.id,
         name: response.data.name,
-        address: '',
-        phoneNumber: '',
+        address: "",
+        phoneNumber: "",
       };
       const currentUser: IUser = {
         id: response.data.id,
@@ -45,7 +46,7 @@ export const loginMethod = createAsyncThunk(
 );
 
 export const registerMethod = createAsyncThunk(
-  'auth/registerMethod',
+  "auth/registerMethod",
   async (data: IRegisterRequestData, thunkApi) => {
     try {
       const response = await authApiMethod.register(data);
