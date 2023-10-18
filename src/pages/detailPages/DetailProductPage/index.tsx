@@ -6,7 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Loading from "src/components/Loading";
 import { setLoginModalIsOpen } from "src/services/modal/modalSlice";
-import { getOneProductMethod } from "src/services/product/productAction";
+import { getOneProductMethod } from "src/services/product/productThunkActions";
 import {
   addToCart,
   resetCurrentProduct,
@@ -35,7 +35,7 @@ const DetailProductPage = () => {
   const navigate = useNavigate();
 
   const { style } = useSelector((state: RootState) => state.themeState);
-  const { token } = useSelector((state: RootState) => state.authState);
+  const { accessToken } = useSelector((state: RootState) => state.authState);
 
   // handle add to cart click
   function handleAddToCartClick() {
@@ -53,7 +53,7 @@ const DetailProductPage = () => {
   }
 
   const handleBuyNowOnClick = () => {
-    if (token) {
+    if (accessToken) {
       toast.success(t("message.success.checkout"));
     } else {
       toast.warn(t("message.warning.loginFirst"));
@@ -62,7 +62,7 @@ const DetailProductPage = () => {
   };
 
   useEffect(() => {
-    if (!Number(id) || !id) {
+    if (!id) {
       navigate(ERouterPath.NOT_FOUND);
     } else dispatch(getOneProductMethod(id));
 

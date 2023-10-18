@@ -8,6 +8,7 @@
   left: 0;
   z-index: $loading-zindex;
   background-color: #fff2;
+  display: none;
 
   .loading-overlay {
     position: fixed;

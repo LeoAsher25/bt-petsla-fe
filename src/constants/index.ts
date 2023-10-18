@@ -1,0 +1,2 @@
+export const DEFAULT_ITEMS_PER_PAGE = 12;
+export const DEFAULT_MAX_ITEMS_PER_PAGE = 99999;

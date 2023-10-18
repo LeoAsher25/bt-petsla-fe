@@ -13,7 +13,7 @@ import AccountPageHeader from "src/pages/accountPage/components/AccountPageHeade
 import {
   addOrderMethod,
   getOneOrderMethod,
-} from "src/services/user/userAction";
+} from "src/services/user/userThunkActions";
 import { RootState } from "src/stores/rootReducer";
 import { ERequestStatus } from "src/types/commonType";
 import {

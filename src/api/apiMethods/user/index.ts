@@ -1,4 +1,4 @@
-import axiosInstance from "src/api/axisInstance";
+import axiosInstance from "src/api/axiosInstance";
 import { IRequestedOrder } from "src/types/productTypes";
 import { getLocalStorage } from "src/utils/localStorage";
 
@@ -7,7 +7,7 @@ const userApiMethod = {
     const url = "/profile";
     return axiosInstance.get(url, {
       headers: {
-        Authorization: "Bearer " + getLocalStorage("token"),
+        Authorization: "Bearer " + getLocalStorage("accessToken"),
       },
     });
   },
@@ -16,7 +16,7 @@ const userApiMethod = {
     const url = `/add-order/`;
     return axiosInstance.post(url, order, {
       headers: {
-        Authorization: "Bearer " + getLocalStorage("token"),
+        Authorization: "Bearer " + getLocalStorage("accessToken"),
       },
     });
   },
@@ -25,7 +25,7 @@ const userApiMethod = {
     const url = "/get-order";
     return axiosInstance.get(url, {
       headers: {
-        Authorization: "Bearer " + getLocalStorage("token"),
+        Authorization: "Bearer " + getLocalStorage("accessToken"),
       },
     });
   },
@@ -34,7 +34,7 @@ const userApiMethod = {
     const url = `order/${id}`;
     return axiosInstance.get(url, {
       headers: {
-        Authorization: "Bearer " + getLocalStorage("token"),
+        Authorization: "Bearer " + getLocalStorage("accessToken"),
       },
     });
   },

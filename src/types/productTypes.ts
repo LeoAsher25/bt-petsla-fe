@@ -69,10 +69,13 @@ export enum EOrderStatus {
   CANCELLEDf,
 }
 
-// const x = {
-//   orderItems: [{ product_id: 8, quantity: 1, price: 360000 }],
-//   number_phone: '123123',
-//   address: 'Tại cửa',
-//   total_price: 360000,
-//   note: '',
-// };
+export enum EIProductCategoryType {
+  BY_PET,
+  BY_USAGE,
+}
+
+export interface IProductCategory {
+  _id: string;
+  name: string;
+  type: EIProductCategoryType;
+}

@@ -32,7 +32,7 @@ const TopCart = ({ showCart, handleCloseTopCart }: ITopCartProps) => {
   );
   const { cartList, totalInCart } = productState;
   const { style, isLightTheme } = themeState;
-  const { token } = authState;
+  const { accessToken } = authState;
 
   const dispatch = useAppDispatch();
   const handlePlusToCart = (id: number | string) => {
@@ -52,7 +52,7 @@ const TopCart = ({ showCart, handleCloseTopCart }: ITopCartProps) => {
   };
 
   const handleCheckoutClick = () => {
-    if (!token) {
+    if (!accessToken) {
       toast.warning(t("message.warning.loginFirst"));
     } else if (cartList.length <= 0) {
       toast.warning(t("message.warning.noProductInCart"));

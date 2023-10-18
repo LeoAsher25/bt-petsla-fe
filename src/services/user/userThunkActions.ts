@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import { userApiMethod } from "src/api/apiMethods";
+import repositories from "src/api/repositories";
 import { ILoginResponseError } from "src/types/authTypes";
 import { IRequestedOrder } from "src/types/productTypes";
 
@@ -8,8 +9,7 @@ export const getUserInfoMethod = createAsyncThunk(
   "user/getUserInfoMethod",
   async (_, thunkApi) => {
     try {
-      const response = await userApiMethod.getUserInfo();
-      console.log("get profile", response);
+      const response = await repositories.auth.get("/profile");
       return response.data;
     } catch (err) {
       const error = err as AxiosError<ILoginResponseError>;

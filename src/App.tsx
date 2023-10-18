@@ -65,7 +65,7 @@ function App() {
 
             {/* detail pages  */}
             <Route
-              path={`${ERouterPath.PRODUCTS}:id`}
+              path={`${ERouterPath.PRODUCTS}/:id`}
               element={<DetailProductPage />}
             />
 

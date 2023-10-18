@@ -5,8 +5,8 @@ export enum ERequestStatus {
 }
 
 export enum ELanguage {
-  ENGLISH = 'en-US',
-  VIETNAMESE = 'vn',
+  ENGLISH = "en-US",
+  VIETNAMESE = "vn",
 }
 
 export enum EModalType {
@@ -22,4 +22,14 @@ export enum ESortType {
 export enum ESortDirect {
   DESCENDING,
   ASCENDING,
+}
+
+export interface IErrorResponse {
+  code?: string;
+  message: string;
+}
+
+export interface IGetListResponse<T> {
+  totalRecords: number;
+  dataList: T[];
 }

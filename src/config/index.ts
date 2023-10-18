@@ -1,2 +1,1 @@
-import 'src/config/i18next';
-import 'src/config/toastConfig';
+import "src/config/i18next";

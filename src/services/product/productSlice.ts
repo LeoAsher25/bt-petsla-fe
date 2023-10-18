@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import {
   getAllProductMethod,
   getOneProductMethod,
-} from "src/services/product/productAction";
+} from "src/services/product/productThunkActions";
 import { ERequestStatus } from "src/types/commonType";
 import { ICartProduct, IProduct } from "src/types/productTypes";
 import { getLocalStorage } from "src/utils/localStorage";

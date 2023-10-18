@@ -1,48 +1,48 @@
-import React, { ChangeEvent } from 'react';
-import { Form, Pagination } from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
-import { RootState } from 'src/stores/rootReducer';
-import { useAppSelector } from 'src/utils/hook.ts/customReduxHook';
-import './CustomPagination.scss';
+import React, { useState } from "react";
+import { Pagination } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
+import { RootState } from "src/stores/rootReducer";
+import { useAppSelector } from "src/utils/hook.ts/customReduxHook";
+import "./CustomPagination.scss";
+import { DEFAULT_ITEMS_PER_PAGE } from "src/constants";
+import { useEffect } from "react";
 
 interface IPaginationProps {
-  totalPage: number;
-  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
-  setItemsPerPage: React.Dispatch<React.SetStateAction<number>>;
+  totalItems: number;
   currentPage: number;
-  listItemsPerPage?: number[];
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const CustomPagination = ({
-  totalPage,
-  setCurrentPage,
-  setItemsPerPage,
+  totalItems,
   currentPage,
-  listItemsPerPage,
+  setCurrentPage,
 }: IPaginationProps) => {
   const { t } = useTranslation();
+
+  const [totalPage, setTotalPage] = useState(
+    Math.ceil(totalItems / DEFAULT_ITEMS_PER_PAGE)
+  );
+
+  useEffect(() => {
+    setTotalPage(Math.ceil(totalItems / DEFAULT_ITEMS_PER_PAGE));
+  }, [totalItems]);
 
   const handleChangePage = (page: number) => {
     window.scrollTo(0, 0);
     setCurrentPage(page);
   };
 
-  const handleChangeItemsPerPage = (number: number) => {
-    window.scrollTo(0, 0);
-    setItemsPerPage(number);
-    setCurrentPage(1);
-  };
-
   const { style } = useAppSelector((state: RootState) => state.themeState);
 
   return (
-    <div className='custom-pagination'>
-      <Pagination className='pagination-wrap'>
+    <div className="custom-pagination">
+      <Pagination className="pagination-wrap">
         <Pagination.Item
           style={{ backgroundColor: style.backgroundColor }}
           disabled={currentPage === 1}
           onClick={() => handleChangePage(currentPage - 1)}>
-          <i className='fas fa-chevron-left'></i>
+          <i className="fas fa-chevron-left"></i>
         </Pagination.Item>
 
         {Array.from(Array(totalPage).keys()).map((number) => (
@@ -59,35 +59,9 @@ const CustomPagination = ({
           style={{ backgroundColor: style.backgroundColor }}
           disabled={currentPage === totalPage}
           onClick={() => handleChangePage(currentPage + 1)}>
-          <i className='fas fa-chevron-right'></i>
+          <i className="fas fa-chevron-right"></i>
         </Pagination.Item>
       </Pagination>
-
-      <Form.Group className='select-products-per-page'>
-        <Form.Label htmlFor='itemsPerPage' className='label'>
-          {`${t('title.item')}/${t('title.page')}`}
-        </Form.Label>
-        <Form.Select
-          style={{ backgroundColor: style.backgroundColor, color: style.color }}
-          onChange={(event: ChangeEvent<HTMLSelectElement>) =>
-            handleChangeItemsPerPage(Number(event.target.value))
-          }
-          id='itemsPerPage'>
-          {listItemsPerPage ? (
-            listItemsPerPage.map((number: number) => (
-              <option key={number} value={number}>
-                {number}
-              </option>
-            ))
-          ) : (
-            <>
-              <option value={12}>12</option>
-              <option value={24}>24</option>
-              <option value={36}>36</option>
-            </>
-          )}
-        </Form.Select>
-      </Form.Group>
     </div>
   );
 };

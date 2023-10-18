@@ -1,4 +1,4 @@
-import { axiosInstance } from "src/api/axisInstance";
+import { axiosInstance } from "src/api/axiosInstance";
 
 const productApiMethod = {
   getAll: () => {

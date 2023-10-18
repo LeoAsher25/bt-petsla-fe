@@ -36,7 +36,7 @@ const CartPage = () => {
   const { t } = useTranslation();
   const { cartList, totalInCart } = productState;
   const { isLightTheme, style } = themeState;
-  const { token } = authState;
+  const { accessToken } = authState;
 
   const navigate = useNavigate();
 
@@ -58,7 +58,7 @@ const CartPage = () => {
   };
 
   const handleCheckoutClick = () => {
-    if (!token) {
+    if (!accessToken) {
       toast.warning(t("message.warning.loginFirst"));
     } else if (cartList.length <= 0) {
       toast.warning(t("message.warning.noProductInCart"));

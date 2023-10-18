@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -8,13 +7,13 @@ import { addToCart } from "src/services/product/productSlice";
 import { RootState } from "src/stores/rootReducer";
 import { ICartProduct, IProduct } from "src/types/productTypes";
 import { ERouterPath } from "src/types/route";
+import Media from "src/utils/Media";
+import getFullPathMedia from "src/utils/Media/getFullPathMedia";
 import {
   useAppDispatch,
   useAppSelector,
 } from "src/utils/hook.ts/customReduxHook";
-import Media from "src/utils/Media";
 import "./ProductItem.scss";
-import getFullPathMedia from "src/utils/Media/getFullPathMedia";
 
 const ProductItem = (props: any) => {
   const { product } = props;
@@ -25,7 +24,7 @@ const ProductItem = (props: any) => {
   const { t } = useTranslation();
 
   const { authState, themeState } = useAppSelector((state: RootState) => state);
-  const { token } = authState;
+  const { accessToken } = authState;
   const { style } = themeState;
 
   const dispatch = useAppDispatch();
@@ -45,7 +44,7 @@ const ProductItem = (props: any) => {
   }
 
   const handleBuyNowOnClick = () => {
-    if (token) {
+    if (accessToken) {
       toast.success(t("message.success.checkout"));
     } else {
       toast.warn(t("message.warning.loginFirst"));
@@ -103,10 +102,6 @@ const ProductItem = (props: any) => {
       </div>
     </>
   );
-};
-
-ProductItem.propTypes = {
-  product: PropTypes.object,
 };
 
 export default ProductItem;

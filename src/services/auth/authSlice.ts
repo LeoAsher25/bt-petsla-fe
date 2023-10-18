@@ -1,39 +1,42 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { AxiosResponse } from 'axios';
-import { t } from 'i18next';
-import { toast } from 'react-toastify';
-import { loginMethod } from 'src/services/auth/authAction';
+import { createSlice } from "@reduxjs/toolkit";
+import { AxiosResponse } from "axios";
+import { t } from "i18next";
+import { toast } from "react-toastify";
+import { loginMethod } from "src/services/auth/authThunkActions";
 import {
   ILoginRequestData,
   ILoginResponseData,
   ILoginResponseError,
-} from 'src/types/authTypes';
-import { ERequestStatus } from 'src/types/commonType';
+} from "src/types/authTypes";
+import { ERequestStatus } from "src/types/commonType";
 import {
   getLocalStorage,
   removeLocalStorage,
   setLocalStorage,
-} from 'src/utils/localStorage';
+} from "src/utils/localStorage";
 
 interface IInitialState {
-  token: string;
+  accessToken: string;
   requestStatus: ERequestStatus;
 }
 
 const initialState: IInitialState = {
-  token: getLocalStorage('token'),
+  accessToken: getLocalStorage("accessToken"),
   requestStatus: ERequestStatus.FULFILLED,
 };
 
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
     logoutMethod: (state) => {
-      state.token = '';
-      removeLocalStorage('token');
-      removeLocalStorage('currentOrderInfo');
-      toast.success(t('message.success.logout'));
+      state.accessToken = "";
+      removeLocalStorage("accessToken");
+      removeLocalStorage("currentOrderInfo");
+      toast.success(t("message.success.logout"));
+    },
+    setItem(state, action) {
+      Object.assign(state, action.payload);
     },
   },
   extraReducers: (builder) => {
@@ -48,9 +51,9 @@ const authSlice = createSlice({
           ILoginResponseData,
           ILoginRequestData
         >;
-        state.token = payload.data.token;
-        setLocalStorage('token', state.token);
-        toast.success(t('message.success.login'));
+        state.accessToken = payload.data.accessToken!;
+        setLocalStorage("accessToken", state.accessToken);
+        toast.success(t("message.success.login"));
       })
       .addCase(loginMethod.rejected, (state, action) => {
         state.requestStatus = ERequestStatus.REJECTED;
@@ -65,4 +68,4 @@ const authSlice = createSlice({
 
 export const authReducer = authSlice.reducer;
 
-export const { logoutMethod } = authSlice.actions;
+export const authActions = authSlice.actions;

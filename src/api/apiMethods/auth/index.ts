@@ -1,14 +1,14 @@
-import axiosInstance from 'src/api/axisInstance';
-import { ILoginRequestData, IRegisterRequestData } from 'src/types/authTypes';
+import axiosInstance from "src/api/axiosInstance";
+import { ILoginRequestData, IRegisterRequestData } from "src/types/authTypes";
 
 const authApiMethod = {
   login: (data: ILoginRequestData) => {
-    const url = '/login/';
+    const url = "/login/";
     return axiosInstance.post(url, data);
   },
 
   register: (data: IRegisterRequestData) => {
-    const url = '/register/';
+    const url = "/register/";
     return axiosInstance.post(url, data);
   },
 };

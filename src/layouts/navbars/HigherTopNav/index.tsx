@@ -1,23 +1,23 @@
-import React from 'react';
-import { Container } from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
-import StyledLink from 'src/components/customComponents/StyledLink';
-import ChangeLangPopOver from 'src/layouts/modals/ChangeLangPopOver';
-import { logoutMethod } from 'src/services/auth/authSlice';
-import { setLoginModalIsOpen } from 'src/services/modal/modalSlice';
-import { toggleTheme } from 'src/services/theme/ThemeSlice';
+import React from "react";
+import { Container } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
+import StyledLink from "src/components/customComponents/StyledLink";
+import ChangeLangPopOver from "src/layouts/modals/ChangeLangPopOver";
+import { authActions } from "src/services/auth/authSlice";
+import { setLoginModalIsOpen } from "src/services/modal/modalSlice";
+import { toggleTheme } from "src/services/theme/ThemeSlice";
 import {
   setCurrentCustomerInfo,
   setCurrentUser,
-} from 'src/services/user/userSlice';
-import { RootState } from 'src/stores/rootReducer';
-import { ERouterPath } from 'src/types/route';
+} from "src/services/user/userSlice";
+import { RootState } from "src/stores/rootReducer";
+import { ERouterPath } from "src/types/route";
 import {
   useAppDispatch,
   useAppSelector,
-} from 'src/utils/hook.ts/customReduxHook';
-import Media from 'src/utils/Media';
-import './HigherTopNav.scss';
+} from "src/utils/hook.ts/customReduxHook";
+import Media from "src/utils/Media";
+import "./HigherTopNav.scss";
 
 const HigherTopNav = () => {
   const { themeState, authState } = useAppSelector((state: RootState) => state);
@@ -25,7 +25,7 @@ const HigherTopNav = () => {
   const { t } = useTranslation();
 
   const { style, isLightTheme } = themeState;
-  const { token } = authState;
+  const { accessToken } = authState;
 
   const dispatch = useAppDispatch();
 
@@ -41,98 +41,98 @@ const HigherTopNav = () => {
   const handleLogoutClick = () => {
     dispatch(setCurrentCustomerInfo(null));
     dispatch(setCurrentUser(null));
-    dispatch(logoutMethod());
+    dispatch(authActions.logoutMethod());
   };
 
   return (
     <div
-      className='higher-top-nav'
+      className="higher-top-nav"
       style={{
         backgroundColor: style.backgroundColor,
         borderBottomColor: style.borderColor,
       }}>
       <Container>
-        <div className='higher-top-nav-wrap'>
-          <div className='info-wrap d-none d-md-flex '>
-            <div className='info-item'>
-              <i className='bi bi-envelope'></i>
-              <div className='text'>petsla.vn@gmail.com</div>
+        <div className="higher-top-nav-wrap">
+          <div className="info-wrap d-none d-md-flex ">
+            <div className="info-item">
+              <i className="bi bi-envelope"></i>
+              <div className="text">petsla.vn@gmail.com</div>
             </div>
 
             <div
-              className='info-item-divider'
+              className="info-item-divider"
               style={{ backgroundColor: style.borderColor }}></div>
 
-            <div className='info-item'>
-              <i className='bi bi-telephone'></i>
-              <div className='text'>0123 456 789</div>
+            <div className="info-item">
+              <i className="bi bi-telephone"></i>
+              <div className="text">0123 456 789</div>
             </div>
           </div>
 
-          <div className='top-nav__branch d-flex d-md-none '>
+          <div className="top-nav__branch d-flex d-md-none ">
             <StyledLink to={ERouterPath.HOME}>
-              <img src={Media.fullLogo} alt='' />
+              <img src={Media.fullLogo} alt="" />
             </StyledLink>
           </div>
 
-          <div className='btn-wrap'>
-            <div className='higher-top-nav-item language-wrap'>
+          <div className="btn-wrap">
+            <div className="higher-top-nav-item language-wrap">
               <ChangeLangPopOver />
               <div
-                className='higher-top-nav-item__title'
+                className="higher-top-nav-item__title"
                 style={{
                   backgroundColor: style.colorBlur,
                   color: style.backgroundColor,
                 }}>
-                {t('title.toggleTheme')}
+                {t("title.toggleTheme")}
               </div>
             </div>
 
             <div
-              className='higher-top-nav__theme higher-top-nav-item '
+              className="higher-top-nav__theme higher-top-nav-item "
               onClick={() => handleToggleThemeClick()}>
               {isLightTheme ? (
-                <i className='bi bi-moon toggle-theme-icon'></i>
+                <i className="bi bi-moon toggle-theme-icon"></i>
               ) : (
-                <i className='bi bi-brightness-high-fill'></i>
+                <i className="bi bi-brightness-high-fill"></i>
               )}
               <div
-                className='higher-top-nav-item__title'
+                className="higher-top-nav-item__title"
                 style={{
                   backgroundColor: style.colorBlur,
                   color: style.backgroundColor,
                 }}>
-                {t('title.toggleTheme')}
+                {t("title.toggleTheme")}
               </div>
             </div>
 
-            <div className='auth-btn__wrap higher-top-nav-item'>
-              {token ? (
+            <div className="auth-btn__wrap higher-top-nav-item">
+              {accessToken ? (
                 <>
                   <i
                     onClick={handleLogoutClick}
-                    className='bi bi-box-arrow-right'></i>
+                    className="bi bi-box-arrow-right"></i>
                   <div
-                    className='higher-top-nav-item__title'
+                    className="higher-top-nav-item__title"
                     style={{
                       backgroundColor: style.colorBlur,
                       color: style.backgroundColor,
                     }}>
-                    {t('title.logout')}
+                    {t("title.logout")}
                   </div>
                 </>
               ) : (
                 <>
                   <i
                     onClick={handleLoginClick}
-                    className='bi bi-box-arrow-in-left'></i>
+                    className="bi bi-box-arrow-in-left"></i>
                   <div
-                    className='higher-top-nav-item__title'
+                    className="higher-top-nav-item__title"
                     style={{
                       backgroundColor: style.colorBlur,
                       color: style.backgroundColor,
                     }}>
-                    {t('title.login')}
+                    {t("title.login")}
                   </div>
                 </>
               )}

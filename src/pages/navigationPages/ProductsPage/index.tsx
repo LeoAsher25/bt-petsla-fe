@@ -1,13 +1,21 @@
-import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { PayloadAction } from "@reduxjs/toolkit";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Container, Form } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
-import CustomPagination from "src/components/customComponents/CustomPagination";
-import Loading from "src/components/Loading";
 import ProductList from "src/components/ProductList";
-import { getAllProductMethod } from "src/services/product/productAction";
-import { RootState } from "src/stores/rootReducer";
-import { ERequestStatus } from "src/types/commonType";
-import { IProduct } from "src/types/productTypes";
+import CustomPagination from "src/components/customComponents/CustomPagination";
+import { DEFAULT_ITEMS_PER_PAGE } from "src/constants";
+import {
+  getAllProductCategories,
+  getAllProductMethod,
+} from "src/services/product/productThunkActions";
+import { AppDispatch, RootState } from "src/stores/rootReducer";
+import { IGetListResponse } from "src/types/commonType";
+import {
+  EIProductCategoryType,
+  IProduct,
+  IProductCategory,
+} from "src/types/productTypes";
 import {
   useAppDispatch,
   useAppSelector,
@@ -17,143 +25,156 @@ import "./ProductsPage.scss";
 const sortList = [
   {
     value: 0,
-    displayName: "Relevance",
+    name: "Relevance",
   },
   {
     value: 1,
-    displayName: "Name: A-Z",
+    name: "Name: A-Z",
   },
   {
     value: 2,
-    displayName: "Name: Z-A",
+    name: "Name: Z-A",
   },
   {
     value: 3,
-    displayName: "Price: Low to High",
+    name: "Price: Low to High",
   },
   {
     value: 4,
-    displayName: "Price: High to Low",
+    name: "Price: High to Low",
   },
 ];
 
 const ProductsPage = () => {
-  const dispatch = useAppDispatch();
-  const { productState, themeState } = useAppSelector(
-    (state: RootState) => state
-  );
+  const dispatch: AppDispatch = useAppDispatch();
+  const { themeState } = useAppSelector((state: RootState) => state);
 
-  const { productList, requestStatus } = productState;
   const { style } = themeState;
   const [searchParams] = useSearchParams();
   const [currentSort, setCurrentSort] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+
+  const [productCategories, setProductCategories] = useState<
+    IProductCategory[]
+  >([]);
+
+  const [filteredProductList, setFilteredProductList] = useState<IProduct[]>(
+    []
+  );
 
   useEffect(() => {
-    dispatch(getAllProductMethod());
+    const getDataList = async () => {
+      const params = {
+        page: currentPage - 1,
+        limit: DEFAULT_ITEMS_PER_PAGE,
+        keyword: searchParams.get("search"),
+      };
+      const response = (await dispatch(
+        getAllProductMethod({ params })
+      )) as PayloadAction<IGetListResponse<IProduct>>;
+      setTotalItems(response.payload.totalRecords);
+      setFilteredProductList(response.payload.dataList);
+    };
+
+    getDataList();
+  }, [dispatch, currentPage, searchParams]);
+
+  useEffect(() => {
+    const getAllCategories = async () => {
+      const response = (await dispatch(
+        getAllProductCategories({})
+      )) as PayloadAction<IProductCategory[]>;
+
+      setProductCategories(response.payload);
+    };
+
+    getAllCategories();
   }, [dispatch]);
 
-  const [itemsPerPage, setItemsPerPage] = useState(12);
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const [filteredProductList, setFilteredProductList] = useState(
-    productList.filter((product: IProduct) =>
-      product.name
-        .toLowerCase()
-        .includes((searchParams.get("search") || "").toLowerCase())
-    )
-  );
-
-  const [totalPage, setTotalPage] = useState(
-    Math.ceil(filteredProductList.length / itemsPerPage)
-  );
-
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirsItem = indexOfLastItem - itemsPerPage;
-
-  const currentProductList = filteredProductList.slice(
-    indexOfFirsItem,
-    indexOfLastItem
-  );
+  console.log("productCategories: ", productCategories);
 
   const handleSortSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setCurrentSort(Number(event.target.value));
   };
 
-  const handleSort = () => {
-    let tempProductList = [...filteredProductList];
-    switch (currentSort) {
-      case 0: {
-        tempProductList = productList.filter((product: IProduct) =>
-          product.name
-            .toLowerCase()
-            .includes((searchParams.get("search") || "").toLowerCase())
-        );
-        break;
-      }
-
-      case 1: {
-        tempProductList.sort((p1, p2) => p1.name.localeCompare(p2.name));
-        break;
-      }
-
-      case 2: {
-        tempProductList.sort((p1, p2) => p2.name.localeCompare(p1.name));
-        break;
-      }
-
-      case 3: {
-        tempProductList.sort((p1, p2) => p1.price - p2.price);
-        break;
-      }
-
-      case 4: {
-        tempProductList.sort((p1, p2) => p2.price - p1.price);
-        break;
-      }
-    }
-    return tempProductList;
-  };
-
-  useEffect(() => {
-    setFilteredProductList([...handleSort()]);
-  }, [currentSort]);
-
-  useEffect(() => {
-    setTotalPage(Math.ceil(filteredProductList.length / itemsPerPage));
-  }, [filteredProductList, productList, itemsPerPage]);
-
-  useEffect(() => {
-    setFilteredProductList(
-      productList.filter((product: IProduct) =>
-        product.name
-          .toLowerCase()
-          .includes((searchParams.get("search") || "").toLowerCase())
-      )
-    );
-  }, [searchParams, productList]);
-
   return (
     <div className="product-page">
-      {requestStatus === ERequestStatus.PENDING && <Loading />}
       <Container>
         <div
           className="product-page-header shadow-sm rounded"
           style={{ backgroundColor: style.backgroundColor }}>
-          <div className="header-wrap">
+          <div className="header-wrap justify-content-between">
             {searchParams.get("search") && (
               <div className="search-results-wrap">
                 <div className="title">{`Search for "${searchParams.get(
                   "search"
                 )}"`}</div>
-                <div className="value">
-                  {`${filteredProductList.length} results found`}
-                </div>
+                <div className="value">{`${totalItems} results found`}</div>
               </div>
             )}
 
-            <div className="sort-wrap">
-              <Form.Group className="sort-select-gr">
-                <Form.Label className="label" htmlFor="sort-by">
+            {/* <div className="ms-auto d-flex flex-wrap flex-grow-1 flex-shrink-1 flex-lg-grow-0 flex-lg-shrink-0">
+              <Form.Group
+                className="filter-select-gr flex-grow-1 flex-shrink-1 flex-lg-grow-0 flex-lg-shrink-0 me-3"
+                style={{ width: "180px" }}>
+                <Form.Label className="label mb-1" htmlFor="filter-pets-type">
+                  Pets Type:
+                </Form.Label>
+                <Form.Select
+                  value={currentSort}
+                  onChange={handleSortSelectChange}
+                  id="filter-pets-type"
+                  style={{
+                    backgroundColor: style.backgroundColor,
+                    color: style.color,
+                    cursor: "pointer",
+                  }}>
+                  {productCategories
+                    ?.filter(
+                      (item) => item.type === EIProductCategoryType.BY_PET
+                    )
+                    .map((sortItem) => (
+                      <option key={sortItem._id} value={sortItem._id}>
+                        {sortItem.name}
+                      </option>
+                    ))}
+                </Form.Select>
+              </Form.Group>
+
+              <Form.Group
+                className="filter-select-gr flex-grow-1 flex-shrink-1 flex-lg-grow-0 flex-lg-shrink-0 me-3"
+                style={{ width: "180px" }}>
+                <Form.Label
+                  className="label mb-1"
+                  htmlFor="filter-product-type">
+                  Product Type:
+                </Form.Label>
+                <Form.Select
+                  value={currentSort}
+                  onChange={handleSortSelectChange}
+                  id="filter-product-type"
+                  style={{
+                    backgroundColor: style.backgroundColor,
+                    color: style.color,
+                    cursor: "pointer",
+                  }}>
+                  {productCategories
+                    ?.filter(
+                      (item) => item.type === EIProductCategoryType.BY_USAGE
+                    )
+                    .map((sortItem) => (
+                      <option key={sortItem._id} value={sortItem._id}>
+                        {sortItem.name}
+                      </option>
+                    ))}
+                </Form.Select>
+              </Form.Group>
+
+              <Form.Group
+                className="sort-select-gr flex-grow-1 flex-shrink-1 flex-lg-grow-0 flex-lg-shrink-0 "
+                style={{ width: "180px" }}>
+                <Form.Label className="label mb-1" htmlFor="sort-by">
                   Sort by:{" "}
                 </Form.Label>
                 <Form.Select
@@ -163,25 +184,25 @@ const ProductsPage = () => {
                   style={{
                     backgroundColor: style.backgroundColor,
                     color: style.color,
+                    cursor: "pointer",
                   }}>
                   {sortList.map((sortItem) => (
                     <option key={sortItem.value} value={sortItem.value}>
-                      {sortItem.displayName}
+                      {sortItem.name}
                     </option>
                   ))}
                 </Form.Select>
               </Form.Group>
-            </div>
+            </div> */}
           </div>
         </div>
 
-        <ProductList productList={currentProductList} />
+        <ProductList productList={filteredProductList} />
 
         <CustomPagination
-          setItemsPerPage={setItemsPerPage}
-          totalPage={totalPage}
-          setCurrentPage={setCurrentPage}
+          totalItems={totalItems}
           currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
         />
       </Container>
     </div>

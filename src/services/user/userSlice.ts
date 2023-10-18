@@ -1,18 +1,18 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   addOrderMethod,
   getAllOrderMethod,
   getOneOrderMethod,
   getUserInfoMethod,
-} from 'src/services/user/userAction';
-import { IOrderInfo, IUser } from 'src/types/authTypes';
-import { ERequestStatus } from 'src/types/commonType';
-import { IOrder } from 'src/types/productTypes';
+} from "src/services/user/userThunkActions";
+import { IOrderInfo, IUser } from "src/types/authTypes";
+import { ERequestStatus } from "src/types/commonType";
+import { IOrder } from "src/types/productTypes";
 import {
   getLocalStorage,
   removeLocalStorage,
   setLocalStorage,
-} from 'src/utils/localStorage';
+} from "src/utils/localStorage";
 
 interface IUserSliceState {
   currentOrderInfo: IOrderInfo | null;
@@ -23,15 +23,15 @@ interface IUserSliceState {
 }
 
 const initialState: IUserSliceState = {
-  currentOrderInfo: getLocalStorage('currentOrderInfo'),
+  currentOrderInfo: getLocalStorage("currentOrderInfo"),
   orders: [],
   currentOrder: null,
-  currentUser: getLocalStorage('currentUser'),
+  currentUser: getLocalStorage("currentUser"),
   requestStatus: ERequestStatus.FULFILLED,
 };
 
 const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState,
   reducers: {
     setCurrentCustomerInfo: (
@@ -40,24 +40,24 @@ const userSlice = createSlice({
     ) => {
       state.currentOrderInfo = action.payload;
       action.payload === null
-        ? removeLocalStorage('currentOrderInfo')
-        : setLocalStorage('currentOrderInfo', action.payload);
+        ? removeLocalStorage("currentOrderInfo")
+        : setLocalStorage("currentOrderInfo", action.payload);
     },
 
     setCurrentUser: (state, action: PayloadAction<IUser | null>) => {
       state.currentUser = action.payload;
       const newCurrentOrderInfo: IOrderInfo = {
         id: state.currentUser?.id,
-        name: state.currentUser?.name || '',
-        address: state.currentUser?.address || '',
-        phoneNumber: state.currentUser?.phoneNumber || '',
+        name: state.currentUser?.name || "",
+        address: state.currentUser?.address || "",
+        phoneNumber: state.currentUser?.phoneNumber || "",
         note: state.currentOrderInfo?.note,
       };
 
       action.payload === null
-        ? removeLocalStorage('currentUser')
-        : setLocalStorage('currentUser', action.payload);
-      setLocalStorage('currentOrderInfo', newCurrentOrderInfo);
+        ? removeLocalStorage("currentUser")
+        : setLocalStorage("currentUser", action.payload);
+      setLocalStorage("currentOrderInfo", newCurrentOrderInfo);
     },
   },
   extraReducers: (builder) => {
@@ -87,7 +87,7 @@ const userSlice = createSlice({
           name: action.payload.name,
           username: action.payload.username,
         };
-        setLocalStorage('currentUser', action.payload);
+        setLocalStorage("currentUser", action.payload);
         state.requestStatus = ERequestStatus.FULFILLED;
       })
       .addCase(getUserInfoMethod.rejected, (state) => {

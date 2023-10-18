@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import CheckoutSteps from "src/pages/checkoutStepPages/components/CheckoutSteps";
-import { addOrderMethod } from "src/services/user/userAction";
+import { addOrderMethod } from "src/services/user/userThunkActions";
 import { RootState } from "src/stores/rootReducer";
 import { IOrderInfo } from "src/types/authTypes";
 import { ICartProduct, IRequestedOrder } from "src/types/productTypes";
