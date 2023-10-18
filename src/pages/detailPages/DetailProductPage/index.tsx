@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -15,16 +15,17 @@ import { RootState } from "src/stores/rootReducer";
 import { ERequestStatus } from "src/types/commonType";
 import { ICartProduct } from "src/types/productTypes";
 import { ERouterPath } from "src/types/route";
+import Media from "src/utils/Media";
+import getFullPathMedia from "src/utils/Media/getFullPathMedia";
 import {
   useAppDispatch,
   useAppSelector,
 } from "src/utils/hook.ts/customReduxHook";
-import Media from "src/utils/Media";
 import "./DetailProductPage.scss";
-import getFullPathMedia from "src/utils/Media/getFullPathMedia";
 
 const DetailProductPage = () => {
   const { id } = useParams();
+  console.log("id: ", id);
   const dispatch = useAppDispatch();
   const { currentProduct, requestStatus } = useAppSelector(
     (state: RootState) => state.productState

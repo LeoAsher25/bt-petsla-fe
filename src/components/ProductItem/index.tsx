@@ -64,7 +64,7 @@ const ProductItem = (props: any) => {
         className="product-item  mt-3 shadow-sm"
         style={{ backgroundColor: style.backgroundColor }}>
         <Link
-          to={ERouterPath.DETAIL_PRODUCT + "-" + product._id}
+          to={`${ERouterPath.PRODUCTS}/${product._id}`}
           state={{ product: product }}>
           <div
             className="ava"
@@ -79,7 +79,7 @@ const ProductItem = (props: any) => {
 
         <div className="content p-2 p-lg-3">
           <div className="desc">
-            <Link to={ERouterPath.DETAIL_PRODUCT + "-" + product._id}>
+            <Link to={`${ERouterPath.PRODUCTS}/${product._id}`}>
               <span className="title">{product.name}</span>
             </Link>
             <div className="price"> {formatPrice(product.price)}</div>

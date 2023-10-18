@@ -121,7 +121,7 @@ const DetailOrderPage = () => {
               <div className="detail-order-item">
                 <Link
                   className="detail-order-item-link"
-                  to={`${ERouterPath.DETAIL_PRODUCT}-${product.product}`}>
+                  to={`${ERouterPath.PRODUCTS}/${product.product}`}>
                   <div className="product-info">
                     <div
                       className="product-img"

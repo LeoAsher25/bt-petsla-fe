@@ -4,6 +4,7 @@ export enum ERouterPath {
 
   // nav bar
   SHOP = "/shop",
+  PRODUCTS = "/products",
   HOME = "/",
   CONTACT = "/contact",
   ACCOUNT = "/account",

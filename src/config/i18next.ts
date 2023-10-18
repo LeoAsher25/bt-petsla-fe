@@ -1,8 +1,8 @@
-import i18n from 'i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
-import Backend from 'i18next-http-backend';
-import { initReactI18next } from 'react-i18next';
-import { getLocalStorage } from 'src/utils/localStorage';
+import i18n from "i18next";
+import LanguageDetector from "i18next-browser-languagedetector";
+import Backend from "i18next-http-backend";
+import { initReactI18next } from "react-i18next";
+import { getLocalStorage } from "src/utils/localStorage";
 
 // don't want to use this?
 // have a look at the Quick start guide
@@ -23,11 +23,14 @@ i18n
   // init i18next
   // for all options read: https://www.i18next.com/overview/configuration-options
   .init({
-    fallbackLng: getLocalStorage('i18nextLng'),
+    fallbackLng: getLocalStorage("i18nextLng"),
     debug: true,
 
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default
+    },
+    react: {
+      useSuspense: false, //   <---- this will do the magic
     },
   });
 
