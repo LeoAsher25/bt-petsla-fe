@@ -16,7 +16,7 @@ const ProductList = ({ productList }: IProductListProps) => {
       {productList.length === 0 ? (
         <NoItems />
       ) : (
-        <Row className="px-2">
+        <Row className="">
           {productList.map((product: IProduct) => (
             <Col
               xs="6"

@@ -1,6 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,600;0,700;0,900;1,400&display=swap');
-@import '~bootstrap/scss/bootstrap';
-@import 'src/variable.scss';
+@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,600;0,700;0,900;1,400&display=swap");
+@import "~bootstrap/scss/bootstrap";
+@import "src/variable.scss";
 
 html {
   // overflow-y: overlay;
@@ -33,7 +33,7 @@ html {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Nunito', sans-serif;
+  font-family: "Nunito", sans-serif;
   transition: background-color 0.3s;
   color: inherit;
 
@@ -53,11 +53,10 @@ html {
 }
 
 .home-section__title {
-  font-size: toRem(26);
+  font-size: toRem(24);
   font-weight: 700;
-  padding: toRem(60) 0 toRem(15);
 
-  text-transform: uppercase;
+  text-transform: capitalize;
   text-align: center;
   color: $blue-text-color;
 

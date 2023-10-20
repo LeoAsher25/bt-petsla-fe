@@ -1,5 +1,5 @@
 import { PayloadAction } from "@reduxjs/toolkit";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Container, Form } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
 import ProductList from "src/components/ProductList";
@@ -45,13 +45,23 @@ const sortList = [
   },
 ];
 
-const ProductsPage = () => {
+interface ProductsPageProps {
+  isGift?: boolean;
+}
+
+const ProductsPage = ({ isGift }: ProductsPageProps) => {
   const dispatch: AppDispatch = useAppDispatch();
   const { themeState } = useAppSelector((state: RootState) => state);
 
   const { style } = themeState;
   const [searchParams] = useSearchParams();
-  const [currentSort, setCurrentSort] = useState(0);
+  const [currentPetFilter, setCurrentPetFilter] = useState<string | undefined>(
+    undefined
+  );
+  const [currentUsageFilter, setCurrentUsageFilter] = useState<
+    string | undefined
+  >(undefined);
+
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
 
@@ -65,11 +75,21 @@ const ProductsPage = () => {
 
   useEffect(() => {
     const getDataList = async () => {
-      const params = {
+      const params: Record<string, any> = {
         page: currentPage - 1,
         limit: DEFAULT_ITEMS_PER_PAGE,
         keyword: searchParams.get("search"),
       };
+      const categories = [];
+      if (currentPetFilter) {
+        categories.push(currentPetFilter);
+      }
+      if (currentUsageFilter) {
+        categories.push(currentUsageFilter);
+      }
+
+      params.categories = categories.join(",");
+
       const response = (await dispatch(
         getAllProductMethod({ params })
       )) as PayloadAction<IGetListResponse<IProduct>>;
@@ -78,7 +98,14 @@ const ProductsPage = () => {
     };
 
     getDataList();
-  }, [dispatch, currentPage, searchParams]);
+  }, [
+    dispatch,
+    currentPage,
+    searchParams,
+    currentPetFilter,
+    currentUsageFilter,
+    isGift,
+  ]);
 
   useEffect(() => {
     const getAllCategories = async () => {
@@ -88,15 +115,8 @@ const ProductsPage = () => {
 
       setProductCategories(response.payload);
     };
-
     getAllCategories();
   }, [dispatch]);
-
-  console.log("productCategories: ", productCategories);
-
-  const handleSortSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setCurrentSort(Number(event.target.value));
-  };
 
   return (
     <div className="product-page">
@@ -105,16 +125,20 @@ const ProductsPage = () => {
           className="product-page-header shadow-sm rounded"
           style={{ backgroundColor: style.backgroundColor }}>
           <div className="header-wrap justify-content-between">
-            {searchParams.get("search") && (
+            {searchParams.get("search") ? (
               <div className="search-results-wrap">
                 <div className="title">{`Search for "${searchParams.get(
                   "search"
                 )}"`}</div>
                 <div className="value">{`${totalItems} results found`}</div>
               </div>
+            ) : (
+              <div className="home-section__title">
+                {isGift ? "Danh sách combo" : "Danh sách sản phẩm"}
+              </div>
             )}
 
-            {/* <div className="ms-auto d-flex flex-wrap flex-grow-1 flex-shrink-1 flex-lg-grow-0 flex-lg-shrink-0">
+            <div className="ms-auto d-flex flex-wrap flex-grow-1 flex-shrink-1 flex-lg-grow-0 flex-lg-shrink-0">
               <Form.Group
                 className="filter-select-gr flex-grow-1 flex-shrink-1 flex-lg-grow-0 flex-lg-shrink-0 me-3"
                 style={{ width: "180px" }}>
@@ -122,8 +146,8 @@ const ProductsPage = () => {
                   Pets Type:
                 </Form.Label>
                 <Form.Select
-                  value={currentSort}
-                  onChange={handleSortSelectChange}
+                  value={currentPetFilter}
+                  onChange={(event) => setCurrentPetFilter(event.target.value)}
                   id="filter-pets-type"
                   style={{
                     backgroundColor: style.backgroundColor,
@@ -151,8 +175,10 @@ const ProductsPage = () => {
                   Product Type:
                 </Form.Label>
                 <Form.Select
-                  value={currentSort}
-                  onChange={handleSortSelectChange}
+                  value={currentUsageFilter}
+                  onChange={(event) =>
+                    setCurrentUsageFilter(event.target.value)
+                  }
                   id="filter-product-type"
                   style={{
                     backgroundColor: style.backgroundColor,
@@ -171,7 +197,7 @@ const ProductsPage = () => {
                 </Form.Select>
               </Form.Group>
 
-              <Form.Group
+              {/* <Form.Group
                 className="sort-select-gr flex-grow-1 flex-shrink-1 flex-lg-grow-0 flex-lg-shrink-0 "
                 style={{ width: "180px" }}>
                 <Form.Label className="label mb-1" htmlFor="sort-by">
@@ -192,8 +218,8 @@ const ProductsPage = () => {
                     </option>
                   ))}
                 </Form.Select>
-              </Form.Group>
-            </div> */}
+              </Form.Group> */}
+            </div>
           </div>
         </div>
 

@@ -1,6 +1,5 @@
-import React, { lazy, Suspense } from "react";
+import { lazy } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import Loading from "src/components/Loading";
 import PageWrap from "src/components/Navigation/PageWrap";
 import PrivateRoute from "src/components/Navigation/PrivateRoute";
 import AllModal from "src/layouts/modals";
@@ -12,9 +11,9 @@ import CustomerInFoPage from "src/pages/checkoutStepPages/CustomerInFoPage";
 import PaymentPage from "src/pages/checkoutStepPages/PaymentPage";
 import ReviewPage from "src/pages/checkoutStepPages/ReviewPage";
 import DetailOrderPage from "src/pages/detailPages/DetailOrderPage";
-import DetailProductPage from "src/pages/detailPages/DetailProductPage";
 import CartPage from "src/pages/navigationPages/CartPage";
 import ContactPage from "src/pages/navigationPages/ContactPage";
+import DetailProductPage from "src/pages/navigationPages/ProductsPage/DetailProductPage";
 import NotFound from "src/pages/NotFound";
 import { RootState } from "src/stores/rootReducer";
 import { ERouterPath } from "src/types/route";
@@ -71,6 +70,10 @@ function App() {
 
             {/* navigation Page */}
             <Route path={ERouterPath.SHOP} element={<ProductsPage />} />
+            <Route
+              path={ERouterPath.SHOP_COMBO}
+              element={<ProductsPage isGift={true} />}
+            />
             <Route path={ERouterPath.CART} element={<CartPage />} />
             <Route path={ERouterPath.CONTACT} element={<ContactPage />} />
             <Route

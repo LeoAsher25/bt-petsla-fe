@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import {
@@ -11,8 +11,8 @@ import StyledLink from "src/components/customComponents/StyledLink";
 import TopCart from "src/layouts/TopCart";
 import { RootState } from "src/stores/rootReducer";
 import { ERouterPath } from "src/types/route";
-import { useAppSelector } from "src/utils/hook.ts/customReduxHook";
 import Media from "src/utils/Media";
+import { useAppSelector } from "src/utils/hook.ts/customReduxHook";
 import "./TopNav.scss";
 
 const TopNav = () => {
@@ -90,7 +90,7 @@ const TopNav = () => {
                 onChange={(event: ChangeEvent<HTMLInputElement>) =>
                   handleSearchTermChange(event.target.value)
                 }
-                placeholder="Everything here is more aborable than your ex"
+                placeholder="We only have cuties here"
               />
               <Button className="search-btn custom-btn bg-fill" type="submit">
                 <i className="bi bi-search"></i>

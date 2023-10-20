@@ -6,7 +6,7 @@ export enum ERequestStatus {
 
 export enum ELanguage {
   ENGLISH = "en-US",
-  VIETNAMESE = "vn",
+  VIETNAMESE = "vi",
 }
 
 export enum EModalType {
