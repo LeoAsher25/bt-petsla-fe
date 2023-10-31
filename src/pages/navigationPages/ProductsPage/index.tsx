@@ -1,7 +1,7 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import { useEffect, useState } from "react";
 import { Container, Form } from "react-bootstrap";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import ProductList from "src/components/ProductList";
 import CustomPagination from "src/components/customComponents/CustomPagination";
 import { DEFAULT_ITEMS_PER_PAGE } from "src/constants";
@@ -21,6 +21,7 @@ import {
   useAppSelector,
 } from "src/utils/hook.ts/customReduxHook";
 import "./ProductsPage.scss";
+import { handleError } from "src/utils/handleError";
 
 const sortList = [
   {
@@ -46,10 +47,10 @@ const sortList = [
 ];
 
 interface ProductsPageProps {
-  isGift?: boolean;
+  isSpecial?: boolean;
 }
 
-const ProductsPage = ({ isGift }: ProductsPageProps) => {
+const ProductsPage = ({ isSpecial = false }: ProductsPageProps) => {
   const dispatch: AppDispatch = useAppDispatch();
   const { themeState } = useAppSelector((state: RootState) => state);
 
@@ -58,7 +59,11 @@ const ProductsPage = ({ isGift }: ProductsPageProps) => {
   const [currentPetFilter, setCurrentPetFilter] = useState<string | undefined>(
     undefined
   );
-  const [currentUsageFilter, setCurrentUsageFilter] = useState<
+  const [isLoading, setIsLoading] = useState(false);
+
+  const location = useLocation();
+
+  const [currentUsesFilter, setCurrentUsesFilter] = useState<
     string | undefined
   >(undefined);
 
@@ -75,26 +80,32 @@ const ProductsPage = ({ isGift }: ProductsPageProps) => {
 
   useEffect(() => {
     const getDataList = async () => {
-      const params: Record<string, any> = {
-        page: currentPage - 1,
-        limit: DEFAULT_ITEMS_PER_PAGE,
-        keyword: searchParams.get("search"),
-      };
-      const categories = [];
-      if (currentPetFilter) {
-        categories.push(currentPetFilter);
-      }
-      if (currentUsageFilter) {
-        categories.push(currentUsageFilter);
-      }
+      try {
+        setIsLoading(true);
+        const params: Record<string, any> = {
+          page: currentPage - 1,
+          limit: DEFAULT_ITEMS_PER_PAGE,
+          keyword: searchParams.get("search") || undefined,
+          isSpecial,
+        };
 
-      params.categories = categories.join(",");
+        if (currentPetFilter && currentPetFilter !== "-1") {
+          params.petType = currentPetFilter;
+        }
+        if (currentUsesFilter && currentUsesFilter !== "-1") {
+          params.usesTypes = currentUsesFilter;
+        }
 
-      const response = (await dispatch(
-        getAllProductMethod({ params })
-      )) as PayloadAction<IGetListResponse<IProduct>>;
-      setTotalItems(response.payload.totalRecords);
-      setFilteredProductList(response.payload.dataList);
+        const response = (await dispatch(
+          getAllProductMethod({ params })
+        )) as PayloadAction<IGetListResponse<IProduct>>;
+        setTotalItems(response.payload.totalRecords);
+        setFilteredProductList(response.payload.dataList);
+      } catch (error) {
+        handleError(error);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     getDataList();
@@ -103,8 +114,8 @@ const ProductsPage = ({ isGift }: ProductsPageProps) => {
     currentPage,
     searchParams,
     currentPetFilter,
-    currentUsageFilter,
-    isGift,
+    currentUsesFilter,
+    isSpecial,
   ]);
 
   useEffect(() => {
@@ -117,6 +128,11 @@ const ProductsPage = ({ isGift }: ProductsPageProps) => {
     };
     getAllCategories();
   }, [dispatch]);
+
+  useEffect(() => {
+    setCurrentPetFilter("-1");
+    setCurrentUsesFilter("-1");
+  }, [location]);
 
   return (
     <div className="product-page">
@@ -134,7 +150,7 @@ const ProductsPage = ({ isGift }: ProductsPageProps) => {
               </div>
             ) : (
               <div className="home-section__title">
-                {isGift ? "Danh sách combo" : "Danh sách sản phẩm"}
+                {isSpecial ? "Premium" : "Danh sách sản phẩm"}
               </div>
             )}
 
@@ -154,15 +170,19 @@ const ProductsPage = ({ isGift }: ProductsPageProps) => {
                     color: style.color,
                     cursor: "pointer",
                   }}>
-                  {productCategories
-                    ?.filter(
+                  {[
+                    {
+                      _id: "-1",
+                      name: "All",
+                    } as IProductCategory,
+                    ...productCategories?.filter(
                       (item) => item.type === EIProductCategoryType.BY_PET
-                    )
-                    .map((sortItem) => (
-                      <option key={sortItem._id} value={sortItem._id}>
-                        {sortItem.name}
-                      </option>
-                    ))}
+                    ),
+                  ].map((sortItem) => (
+                    <option key={sortItem._id} value={sortItem._id}>
+                      {sortItem.name}
+                    </option>
+                  ))}
                 </Form.Select>
               </Form.Group>
 
@@ -175,25 +195,27 @@ const ProductsPage = ({ isGift }: ProductsPageProps) => {
                   Product Type:
                 </Form.Label>
                 <Form.Select
-                  value={currentUsageFilter}
-                  onChange={(event) =>
-                    setCurrentUsageFilter(event.target.value)
-                  }
+                  value={currentUsesFilter}
+                  onChange={(event) => setCurrentUsesFilter(event.target.value)}
                   id="filter-product-type"
                   style={{
                     backgroundColor: style.backgroundColor,
                     color: style.color,
                     cursor: "pointer",
                   }}>
-                  {productCategories
-                    ?.filter(
+                  {[
+                    {
+                      _id: "-1",
+                      name: "All",
+                    },
+                    ...productCategories?.filter(
                       (item) => item.type === EIProductCategoryType.BY_USAGE
-                    )
-                    .map((sortItem) => (
-                      <option key={sortItem._id} value={sortItem._id}>
-                        {sortItem.name}
-                      </option>
-                    ))}
+                    ),
+                  ].map((sortItem) => (
+                    <option key={sortItem._id} value={sortItem._id}>
+                      {sortItem.name}
+                    </option>
+                  ))}
                 </Form.Select>
               </Form.Group>
 
@@ -223,7 +245,7 @@ const ProductsPage = ({ isGift }: ProductsPageProps) => {
           </div>
         </div>
 
-        <ProductList productList={filteredProductList} />
+        <ProductList isLoading={isLoading} productList={filteredProductList} />
 
         <CustomPagination
           totalItems={totalItems}

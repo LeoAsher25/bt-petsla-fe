@@ -75,7 +75,7 @@ export enum EIProductCategoryType {
 }
 
 export interface IProductCategory {
-  _id: string;
-  name: string;
-  type: EIProductCategoryType;
+  _id?: string;
+  name?: string;
+  type?: EIProductCategoryType;
 }

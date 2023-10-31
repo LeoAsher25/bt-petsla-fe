@@ -1,13 +1,13 @@
-import React from 'react';
-import { Button, Modal, Spinner } from 'react-bootstrap';
-import { RootState } from 'src/stores/rootReducer';
-import { ERequestStatus } from 'src/types/commonType';
-import { useAppSelector } from 'src/utils/hook.ts/customReduxHook';
+import React from "react";
+import { Button, Modal, Spinner } from "react-bootstrap";
+import { RootState } from "src/stores/rootReducer";
+import { ERequestStatus } from "src/types/commonType";
+import { useAppSelector } from "src/utils/hook.ts/customReduxHook";
 
 interface IModalFooterProps {
   handleClose: () => void;
   handleSave?: () => void;
-  type?: 'button' | 'submit' | 'reset' | undefined;
+  type?: "button" | "submit" | "reset" | undefined;
   saveBtnTitle?: string;
 }
 
@@ -17,26 +17,16 @@ const ModalFooter = ({
   saveBtnTitle,
   handleSave,
 }: IModalFooterProps) => {
-  const { requestStatus } = useAppSelector(
-    (state: RootState) => state.authState
-  );
-
   return (
-    <Modal.Footer className='d-flex justify-content-between'>
-      <Button variant='secondary' onClick={handleClose}>
+    <Modal.Footer className="d-flex justify-content-between">
+      <Button variant="secondary" onClick={handleClose}>
         Close
       </Button>
       <Button
-        type={type || 'submit'}
+        type={type || "submit"}
         className="custom-btn bg-fill"
         onClick={handleSave ? handleSave : () => {}}>
-        {requestStatus === ERequestStatus.PENDING ? (
-          <>
-            <Spinner animation='border' size='sm' /> Loading...
-          </>
-        ) : (
-          saveBtnTitle || 'Save'
-        )}
+        {saveBtnTitle || "Save"}
       </Button>
     </Modal.Footer>
   );

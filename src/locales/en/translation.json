@@ -27,6 +27,7 @@
     "lastName": "Last name",
     "fullname": "Full name",
     "username": "Username",
+    "email": "Email",
     "password": "Password",
     "phoneNumber": "Phone number",
     "address": "Address",

@@ -1,5 +1,5 @@
 export interface ILoginRequestData {
-  username: string;
+  email: string;
   password: string;
 }
 
@@ -19,14 +19,19 @@ export interface IRegisterFormData {
   password: string;
 }
 
+export enum EUserRole {
+  CUSTOMER,
+  ADMIN,
+}
+
 export interface ILoginResponseData {
   refresh?: string;
   access?: string;
-  id?: number | string;
+  _id?: number | string;
   username?: string;
   email?: string;
   name?: string;
-  isAdmin?: boolean;
+  role?: EUserRole;
   accessToken?: string;
 }
 
@@ -41,15 +46,15 @@ export interface IUser {
   name: string;
   email: string;
 
-  id?: number;
+  _id?: string | number;
   gender?: EGender;
-  isAdmin?: boolean;
+  role?: EUserRole;
   address?: string;
   phoneNumber?: string;
 }
 
 export interface IOrderInfo {
-  id?: number;
+  _id?: number | string;
   name: string;
 
   address: string;

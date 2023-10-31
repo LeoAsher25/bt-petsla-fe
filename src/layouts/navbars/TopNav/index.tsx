@@ -59,11 +59,10 @@ const TopNav = () => {
     }
   };
   useEffect(() => {
-    console.log("setSearchParams: ", searchParams.get("search"));
     if (!location.pathname.includes(ERouterPath.SHOP)) {
       setTempSearchTerm("");
     }
-  }, [location]);
+  }, [location, searchParams]);
 
   return (
     <div className="top-nav" style={{ backgroundColor: style.backgroundColor }}>

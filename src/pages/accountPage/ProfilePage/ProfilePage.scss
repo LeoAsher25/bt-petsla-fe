@@ -1,4 +1,4 @@
-@import 'src/variable.scss';
+@import "src/variable.scss";
 
 .profile-page {
   .profile-page-body {
@@ -87,7 +87,8 @@
     .personal-info {
       .form-gr {
         display: flex;
-        align-items: center;
+        align-items: start;
+        flex-direction: column;
 
         label {
           width: toRem(150);
@@ -99,6 +100,7 @@
       .form-gr-row {
         display: flex;
         width: 100%;
+        align-items: center;
         justify-content: space-between;
 
         & > div {

@@ -5,15 +5,19 @@ import NoItems from "src/components/NoItems";
 import ProductItem from "src/components/ProductItem";
 import { IProduct } from "src/types/productTypes";
 import "./ProductList.scss";
+import CatLoading from "src/components/Loading/CatLoading";
 
 interface IProductListProps {
   productList: IProduct[];
+  isLoading?: boolean;
 }
 
-const ProductList = ({ productList }: IProductListProps) => {
+const ProductList = ({ productList, isLoading }: IProductListProps) => {
   return (
     <div className="product-list ">
-      {productList.length === 0 ? (
+      {isLoading ? (
+        <CatLoading />
+      ) : productList.length === 0 ? (
         <NoItems />
       ) : (
         <Row className="">

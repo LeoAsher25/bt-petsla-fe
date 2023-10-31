@@ -47,7 +47,7 @@ const userSlice = createSlice({
     setCurrentUser: (state, action: PayloadAction<IUser | null>) => {
       state.currentUser = action.payload;
       const newCurrentOrderInfo: IOrderInfo = {
-        id: state.currentUser?.id,
+        _id: state.currentUser?._id as string,
         name: state.currentUser?.name || "",
         address: state.currentUser?.address || "",
         phoneNumber: state.currentUser?.phoneNumber || "",
@@ -79,13 +79,13 @@ const userSlice = createSlice({
       })
       .addCase(getUserInfoMethod.fulfilled, (state, action) => {
         state.currentUser = {
-          id: action.payload.id,
-          firstName: action.payload.first_name,
-          lastName: action.payload.last_name,
-          isAdmin: action.payload.isAdmin,
+          _id: action.payload._id,
+          firstName: action.payload.firstName,
+          lastName: action.payload.lastName,
+          role: action.payload.role,
           email: action.payload.email,
-          name: action.payload.name,
-          username: action.payload.username,
+          name: action.payload.firstName + action.payload.lastName,
+          username: action.payload.email,
         };
         setLocalStorage("currentUser", action.payload);
         state.requestStatus = ERequestStatus.FULFILLED;

@@ -69,10 +69,13 @@ function App() {
             />
 
             {/* navigation Page */}
-            <Route path={ERouterPath.SHOP} element={<ProductsPage />} />
+            <Route
+              path={ERouterPath.SHOP}
+              element={<ProductsPage isSpecial={false} />}
+            />
             <Route
               path={ERouterPath.SHOP_COMBO}
-              element={<ProductsPage isGift={true} />}
+              element={<ProductsPage isSpecial={true} />}
             />
             <Route path={ERouterPath.CART} element={<CartPage />} />
             <Route path={ERouterPath.CONTACT} element={<ContactPage />} />

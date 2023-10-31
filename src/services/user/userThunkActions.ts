@@ -9,7 +9,7 @@ export const getUserInfoMethod = createAsyncThunk(
   "user/getUserInfoMethod",
   async (_, thunkApi) => {
     try {
-      const response = await repositories.auth.get("/profile");
+      const response = await repositories.auth.get("profile");
       return response.data;
     } catch (err) {
       const error = err as AxiosError<ILoginResponseError>;

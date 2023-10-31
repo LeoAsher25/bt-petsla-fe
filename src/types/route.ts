@@ -8,7 +8,7 @@ export enum ERouterPath {
   HOME = "/",
   CONTACT = "/contact",
   ACCOUNT = "/account",
-  SHOP_COMBO = "/shop-combo",
+  SHOP_COMBO = "/premium",
 
   // personal detail. Route: ERouterPath.ACCOUNT/pathName
   PROFILE = "profile",

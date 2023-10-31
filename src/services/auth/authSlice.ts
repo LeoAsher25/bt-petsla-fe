@@ -8,7 +8,6 @@ import {
   ILoginResponseData,
   ILoginResponseError,
 } from "src/types/authTypes";
-import { ERequestStatus } from "src/types/commonType";
 import {
   getLocalStorage,
   removeLocalStorage,
@@ -16,13 +15,13 @@ import {
 } from "src/utils/localStorage";
 
 interface IInitialState {
-  accessToken: string;
-  requestStatus: ERequestStatus;
+  accessToken?: string;
+  refreshToken?: string;
 }
 
 const initialState: IInitialState = {
   accessToken: getLocalStorage("accessToken"),
-  requestStatus: ERequestStatus.FULFILLED,
+  refreshToken: getLocalStorage("refreshToken"),
 };
 
 const authSlice = createSlice({
@@ -32,8 +31,7 @@ const authSlice = createSlice({
     logoutMethod: (state) => {
       state.accessToken = "";
       removeLocalStorage("accessToken");
-      removeLocalStorage("currentOrderInfo");
-      toast.success(t("message.success.logout"));
+      removeLocalStorage("refreshToken");
     },
     setItem(state, action) {
       Object.assign(state, action.payload);
@@ -41,12 +39,8 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(loginMethod.pending, (state, action) => {
-        state.requestStatus = ERequestStatus.PENDING;
-      })
 
       .addCase(loginMethod.fulfilled, (state, action) => {
-        state.requestStatus = ERequestStatus.FULFILLED;
         const payload = action.payload as AxiosResponse<
           ILoginResponseData,
           ILoginRequestData
@@ -56,7 +50,6 @@ const authSlice = createSlice({
         toast.success(t("message.success.login"));
       })
       .addCase(loginMethod.rejected, (state, action) => {
-        state.requestStatus = ERequestStatus.REJECTED;
         const payload = action.payload as AxiosResponse<
           ILoginResponseError,
           ILoginRequestData

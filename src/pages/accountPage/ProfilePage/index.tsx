@@ -6,16 +6,17 @@ import { useTranslation } from "react-i18next";
 import { useOutletContext } from "react-router-dom";
 import Loading from "src/components/Loading";
 import AccountPageHeader from "src/pages/accountPage/components/AccountPageHeader";
-import { getUserInfoMethod } from "src/services/user/userThunkActions";
+import { getProfileMethod } from "src/services/auth/authThunkActions";
 import { RootState } from "src/stores/rootReducer";
 import { EGender } from "src/types/authTypes";
 import { ERequestStatus } from "src/types/commonType";
+import Media from "src/utils/Media";
 import {
   useAppDispatch,
   useAppSelector,
 } from "src/utils/hook.ts/customReduxHook";
-import Media from "src/utils/Media";
-import { userInfoSchema } from "src/utils/yup";
+import REGEX from "src/utils/validateRegex";
+import * as Yup from "yup";
 import "./ProfilePage.scss";
 
 const ProfilePage = () => {
@@ -33,30 +34,59 @@ const ProfilePage = () => {
   const { style } = themeState;
   const { t } = useTranslation();
 
+  const userInfoSchema = Yup.object().shape({
+    firstName: Yup.string().required(
+      t("validate.message.requiredItem", {
+        item: t("label.firstName"),
+      })
+    ),
+    lastName: Yup.string().required(
+      t("validate.message.requiredItem", {
+        item: t("label.lastName"),
+      })
+    ),
+    gender: Yup.string(),
+    email: Yup.string().required("Email is required!"),
+    phoneNumber: Yup.string().matches(
+      REGEX.phoneNumber,
+      t("validate.message.inValidItem", {
+        item: t("label.phoneNumber"),
+      })
+    ),
+  });
+
   const [isEdit, setIsEdit] = useState(false);
 
   const defaultValues = {
-    name: currentUser?.name || "",
-    firstName: currentUser?.firstName || "",
-    lastName: currentUser?.lastName || "",
-    email: currentUser?.email || "",
-    username: currentUser?.username || "",
-    phoneNumber: currentUser?.phoneNumber || "",
+    firstName: currentUser?.firstName || undefined,
+    lastName: currentUser?.lastName || undefined,
+    email: currentUser?.email || undefined,
+    username: currentUser?.username || undefined,
+    phoneNumber: currentUser?.phoneNumber || undefined,
     gender: EGender[currentUser?.gender || 3],
   };
   const dispatch = useAppDispatch();
 
   const form = useForm({
     resolver: yupResolver(userInfoSchema),
+    mode: "onChange",
     defaultValues,
   });
 
-  const handleEditSaveBtnClick = () => {
+  const handleEditSaveBtnClick = (data: any) => {
+    console.log("datA:", data);
+    form.trigger();
+    console.log("form.formState.errors", form.formState.errors);
     if (!isEdit) {
       setIsEdit(true);
-    } else {
-      setIsEdit(false);
     }
+    // else {
+    //   setIsEdit(false);
+    // }
+  };
+
+  const handleSaveProfile = (data: any) => {
+    console.log("data;", data);
   };
 
   const handleGenderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,17 +94,16 @@ const ProfilePage = () => {
   };
 
   React.useEffect(() => {
-    dispatch(getUserInfoMethod());
+    dispatch(getProfileMethod());
   }, [dispatch]);
 
   useEffect(() => {
     form.reset({
-      name: currentUser?.name || "",
-      firstName: currentUser?.firstName || "",
-      lastName: currentUser?.lastName || "",
-      email: currentUser?.email || "",
-      username: currentUser?.username || "",
-      phoneNumber: currentUser?.phoneNumber || "",
+      firstName: currentUser?.firstName || undefined,
+      lastName: currentUser?.lastName || undefined,
+      email: currentUser?.email || undefined,
+      username: currentUser?.username || undefined,
+      phoneNumber: currentUser?.phoneNumber || undefined,
       gender: EGender[currentUser?.gender || 2],
     });
   }, [currentUser, form]);
@@ -154,6 +183,7 @@ const ProfilePage = () => {
           <div
             className="personal-info mt-4 shadow-sm rounded p-4"
             style={{ backgroundColor: style.backgroundColor }}>
+            {/* onSubmit={form.handleSubmit(handleSaveProfile)} */}
             <Form>
               <Form.Group className="mt-3 form-gr">
                 <Form.Label htmlFor="first-name">
@@ -165,6 +195,9 @@ const ProfilePage = () => {
                   type="text"
                   {...form.register("firstName")}
                 />
+                <Form.Text className="text-danger">
+                  {form.formState.errors.firstName?.message}
+                </Form.Text>
               </Form.Group>
 
               <Form.Group className="mt-3 form-gr">
@@ -177,16 +210,22 @@ const ProfilePage = () => {
                   type="text"
                   {...form.register("lastName")}
                 />
+                <Form.Text className="text-danger">
+                  {form.formState.errors.lastName?.message}
+                </Form.Text>
               </Form.Group>
 
               <Form.Group className="mt-3 form-gr">
                 <Form.Label htmlFor="email">Email:</Form.Label>
                 <Form.Control
                   id="email"
-                  disabled={!isEdit}
+                  disabled={true}
                   type="text"
                   {...form.register("email")}
                 />
+                <Form.Text className="text-danger">
+                  {form.formState.errors.email?.message}
+                </Form.Text>
               </Form.Group>
 
               <Form.Group className="mt-3 form-gr">
@@ -197,6 +236,9 @@ const ProfilePage = () => {
                   type="text"
                   {...form.register("phoneNumber")}
                 />
+                <Form.Text className="text-danger">
+                  {form.formState.errors.phoneNumber?.message}
+                </Form.Text>
               </Form.Group>
 
               <Form.Group className="mt-3 form-gr">
