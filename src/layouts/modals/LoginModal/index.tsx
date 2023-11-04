@@ -5,7 +5,10 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import AuthFormModal from "src/layouts/modals/AuthFormModal";
-import { loginMethod } from "src/services/auth/authThunkActions";
+import {
+  getProfileMethod,
+  loginMethod,
+} from "src/services/auth/authThunkActions";
 import {
   setLoginModalIsOpen,
   setRegisterModalIsOpen,
@@ -70,6 +73,7 @@ const LoginModal = () => {
     try {
       setIsLoading(true);
       await dispatch(loginMethod(data));
+      await dispatch(getProfileMethod());
     } catch (error) {
       handleError(error);
     } finally {

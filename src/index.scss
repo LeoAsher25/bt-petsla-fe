@@ -77,6 +77,8 @@ html {
 }
 
 .btn.custom-btn {
+  white-space: nowrap;
+
   user-select: none;
   border: 1px solid $primary-color;
   color: $primary-color;

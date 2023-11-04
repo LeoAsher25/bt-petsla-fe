@@ -1,7 +1,9 @@
 import axios from "axios";
 import queryString from "query-string";
 import { authActions } from "src/services/auth/authSlice";
+import { handleRefreshToken } from "src/services/auth/authThunkActions";
 import { store } from "src/stores/rootReducer";
+import { ILoginResponseData } from "src/types/authTypes";
 import { IErrorResponse } from "src/types/commonType";
 import { getLocalStorage } from "src/utils/localStorage";
 
@@ -28,7 +30,7 @@ axiosInstance.interceptors.request.use(
   }
 );
 let refreshTokenRetryCount = 0;
-const maxRefreshTokenRetries = 3;
+const maxRefreshTokenRetries = 1;
 
 axiosInstance.interceptors.response.use((res) => {
   refreshTokenRetryCount = 0;
@@ -71,6 +73,8 @@ async function handleRepositoryError(error: any) {
             refreshToken: refreshToken,
           })
         );
+        refreshTokenRetryCount = 0;
+
         return axiosInstance(originalConfig);
       } catch (error) {
         return Promise.reject<IErrorResponse>(error as IErrorResponse);

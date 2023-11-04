@@ -22,6 +22,7 @@ import {
 } from "src/utils/hook.ts/customReduxHook";
 import "./ProductsPage.scss";
 import { handleError } from "src/utils/handleError";
+import CatLoading from "src/components/Loading/CatLoading";
 
 const sortList = [
   {
@@ -154,72 +155,77 @@ const ProductsPage = ({ isSpecial = false }: ProductsPageProps) => {
               </div>
             )}
 
-            <div className="ms-auto d-flex flex-wrap flex-grow-1 flex-shrink-1 flex-lg-grow-0 flex-lg-shrink-0">
-              <Form.Group
-                className="filter-select-gr flex-grow-1 flex-shrink-1 flex-lg-grow-0 flex-lg-shrink-0 me-3"
-                style={{ width: "180px" }}>
-                <Form.Label className="label mb-1" htmlFor="filter-pets-type">
-                  Pets Type:
-                </Form.Label>
-                <Form.Select
-                  value={currentPetFilter}
-                  onChange={(event) => setCurrentPetFilter(event.target.value)}
-                  id="filter-pets-type"
-                  style={{
-                    backgroundColor: style.backgroundColor,
-                    color: style.color,
-                    cursor: "pointer",
-                  }}>
-                  {[
-                    {
-                      _id: "-1",
-                      name: "All",
-                    } as IProductCategory,
-                    ...productCategories?.filter(
-                      (item) => item.type === EIProductCategoryType.BY_PET
-                    ),
-                  ].map((sortItem) => (
-                    <option key={sortItem._id} value={sortItem._id}>
-                      {sortItem.name}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Form.Group>
+            {!isSpecial && (
+              <div className="ms-auto d-flex flex-wrap flex-grow-1 flex-shrink-1 flex-lg-grow-0 flex-lg-shrink-0">
+                <Form.Group
+                  className="filter-select-gr flex-grow-1 flex-shrink-1 flex-lg-grow-0 flex-lg-shrink-0 me-3"
+                  style={{ width: "180px" }}>
+                  <Form.Label className="label mb-1" htmlFor="filter-pets-type">
+                    Pets Type:
+                  </Form.Label>
+                  <Form.Select
+                    value={currentPetFilter}
+                    onChange={(event) =>
+                      setCurrentPetFilter(event.target.value)
+                    }
+                    id="filter-pets-type"
+                    style={{
+                      backgroundColor: style.backgroundColor,
+                      color: style.color,
+                      cursor: "pointer",
+                    }}>
+                    {[
+                      {
+                        _id: "-1",
+                        name: "All",
+                      } as IProductCategory,
+                      ...productCategories?.filter(
+                        (item) => item.type === EIProductCategoryType.BY_PET
+                      ),
+                    ].map((sortItem) => (
+                      <option key={sortItem._id} value={sortItem._id}>
+                        {sortItem.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
 
-              <Form.Group
-                className="filter-select-gr flex-grow-1 flex-shrink-1 flex-lg-grow-0 flex-lg-shrink-0 me-3"
-                style={{ width: "180px" }}>
-                <Form.Label
-                  className="label mb-1"
-                  htmlFor="filter-product-type">
-                  Product Type:
-                </Form.Label>
-                <Form.Select
-                  value={currentUsesFilter}
-                  onChange={(event) => setCurrentUsesFilter(event.target.value)}
-                  id="filter-product-type"
-                  style={{
-                    backgroundColor: style.backgroundColor,
-                    color: style.color,
-                    cursor: "pointer",
-                  }}>
-                  {[
-                    {
-                      _id: "-1",
-                      name: "All",
-                    },
-                    ...productCategories?.filter(
-                      (item) => item.type === EIProductCategoryType.BY_USAGE
-                    ),
-                  ].map((sortItem) => (
-                    <option key={sortItem._id} value={sortItem._id}>
-                      {sortItem.name}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Form.Group>
+                <Form.Group
+                  className="filter-select-gr flex-grow-1 flex-shrink-1 flex-lg-grow-0 flex-lg-shrink-0 me-3"
+                  style={{ width: "180px" }}>
+                  <Form.Label
+                    className="label mb-1"
+                    htmlFor="filter-product-type">
+                    Product Type:
+                  </Form.Label>
+                  <Form.Select
+                    value={currentUsesFilter}
+                    onChange={(event) =>
+                      setCurrentUsesFilter(event.target.value)
+                    }
+                    id="filter-product-type"
+                    style={{
+                      backgroundColor: style.backgroundColor,
+                      color: style.color,
+                      cursor: "pointer",
+                    }}>
+                    {[
+                      {
+                        _id: "-1",
+                        name: "All",
+                      },
+                      ...productCategories?.filter(
+                        (item) => item.type === EIProductCategoryType.BY_USAGE
+                      ),
+                    ].map((sortItem) => (
+                      <option key={sortItem._id} value={sortItem._id}>
+                        {sortItem.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
 
-              {/* <Form.Group
+                {/* <Form.Group
                 className="sort-select-gr flex-grow-1 flex-shrink-1 flex-lg-grow-0 flex-lg-shrink-0 "
                 style={{ width: "180px" }}>
                 <Form.Label className="label mb-1" htmlFor="sort-by">
@@ -241,17 +247,29 @@ const ProductsPage = ({ isSpecial = false }: ProductsPageProps) => {
                   ))}
                 </Form.Select>
               </Form.Group> */}
-            </div>
+              </div>
+            )}
           </div>
         </div>
 
-        <ProductList isLoading={isLoading} productList={filteredProductList} />
+        {isLoading ? (
+          <CatLoading />
+        ) : (
+          <>
+            <ProductList
+              isLoading={isLoading}
+              productList={filteredProductList}
+            />
 
-        <CustomPagination
-          totalItems={totalItems}
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-        />
+            {filteredProductList.length > 0 && (
+              <CustomPagination
+                totalItems={totalItems}
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+              />
+            )}
+          </>
+        )}
       </Container>
     </div>
   );

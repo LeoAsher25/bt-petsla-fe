@@ -25,14 +25,8 @@ export enum EUserRole {
 }
 
 export interface ILoginResponseData {
-  refresh?: string;
-  access?: string;
-  _id?: number | string;
-  username?: string;
-  email?: string;
-  name?: string;
-  role?: EUserRole;
   accessToken?: string;
+  refreshToken?: string;
 }
 
 export interface ILoginResponseError {
@@ -66,5 +60,4 @@ export enum EGender {
   MALE,
   FEMALE,
   OTHER,
-  UNKNOWN,
 }

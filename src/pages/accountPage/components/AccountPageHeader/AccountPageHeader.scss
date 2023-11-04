@@ -1,9 +1,9 @@
-@import 'src/variable.scss';
+@import "src/variable.scss";
 
 .account-page-header {
   display: flex;
   align-items: center;
-  justify-content: space-between; 
+  justify-content: space-between;
 
   .title-wrap {
     width: 100%;
@@ -28,15 +28,6 @@
       font-size: toRem(28);
       cursor: pointer;
       display: none;
-    }
-  }
-
-  .btn-wrap {
-    // width: 100%;
-
-    .account-page-header-btn {
-      margin-left: toRem(2);
-      white-space: nowrap;
     }
   }
 

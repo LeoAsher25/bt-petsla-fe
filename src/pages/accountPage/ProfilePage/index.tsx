@@ -1,16 +1,14 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import React, { useEffect, useState } from "react";
-import { Col, Form, Row } from "react-bootstrap";
+import React, { useEffect, useMemo, useState } from "react";
+import { Button, Col, Form, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useOutletContext } from "react-router-dom";
-import Loading from "src/components/Loading";
-import AccountPageHeader from "src/pages/accountPage/components/AccountPageHeader";
-import { getProfileMethod } from "src/services/auth/authThunkActions";
+import { updateProfileMethod } from "src/services/auth/authThunkActions";
 import { RootState } from "src/stores/rootReducer";
 import { EGender } from "src/types/authTypes";
-import { ERequestStatus } from "src/types/commonType";
 import Media from "src/utils/Media";
+import { handleError } from "src/utils/handleError";
 import {
   useAppDispatch,
   useAppSelector,
@@ -18,17 +16,16 @@ import {
 import REGEX from "src/utils/validateRegex";
 import * as Yup from "yup";
 import "./ProfilePage.scss";
+import { toast } from "react-toastify";
 
 const ProfilePage = () => {
   const { setShowDashboard } = useOutletContext<{
     setShowDashboard: React.Dispatch<React.SetStateAction<boolean>>;
   }>();
 
-  const { userState, themeState, authState } = useAppSelector(
-    (state: RootState) => state
-  );
+  const { themeState, authState } = useAppSelector((state: RootState) => state);
 
-  const { currentUser, requestStatus } = userState;
+  const { currentUser } = authState;
   const { accessToken } = authState;
 
   const { style } = themeState;
@@ -47,24 +44,33 @@ const ProfilePage = () => {
     ),
     gender: Yup.string(),
     email: Yup.string().required("Email is required!"),
-    phoneNumber: Yup.string().matches(
-      REGEX.phoneNumber,
-      t("validate.message.inValidItem", {
-        item: t("label.phoneNumber"),
-      })
-    ),
+    phoneNumber: Yup.string()
+      .matches(
+        REGEX.phoneNumber,
+        t("validate.message.inValidItem", {
+          item: t("label.phoneNumber"),
+        })
+      )
+      .required(
+        t("validate.message.requiredItem", {
+          item: t("label.phoneNumber"),
+        })
+      ),
   });
 
   const [isEdit, setIsEdit] = useState(false);
 
-  const defaultValues = {
-    firstName: currentUser?.firstName || undefined,
-    lastName: currentUser?.lastName || undefined,
-    email: currentUser?.email || undefined,
-    username: currentUser?.username || undefined,
-    phoneNumber: currentUser?.phoneNumber || undefined,
-    gender: EGender[currentUser?.gender || 3],
-  };
+  const defaultValues = useMemo(
+    () => ({
+      firstName: currentUser?.firstName || "",
+      lastName: currentUser?.lastName || "",
+      email: currentUser?.email || "",
+      phoneNumber: currentUser?.phoneNumber || "",
+      gender: currentUser?.gender,
+    }),
+    [currentUser]
+  );
+
   const dispatch = useAppDispatch();
 
   const form = useForm({
@@ -73,57 +79,100 @@ const ProfilePage = () => {
     defaultValues,
   });
 
-  const handleEditSaveBtnClick = (data: any) => {
-    console.log("datA:", data);
-    form.trigger();
-    console.log("form.formState.errors", form.formState.errors);
-    if (!isEdit) {
-      setIsEdit(true);
+  const handleEditSaveBtnClick = async () => {
+    const isValid = await form.trigger();
+    if (isValid) {
+      try {
+        const payload = form.getValues();
+        payload.gender = Number(payload.gender);
+        console.log(
+          "payload: ",
+          payload,
+          EGender[Number(payload?.gender) || -1]
+        );
+        await dispatch(updateProfileMethod(payload));
+        form.reset({
+          ...payload,
+          gender: payload?.gender,
+        });
+        setIsEdit(false);
+        toast.success("Cập nhật thông tin thành công");
+      } catch (error) {
+        console.log("error:", error);
+        handleError(error);
+      }
     }
-    // else {
-    //   setIsEdit(false);
-    // }
   };
 
-  const handleSaveProfile = (data: any) => {
-    console.log("data;", data);
+  const handleEditCancel = () => {
+    form.reset(defaultValues);
+    setIsEdit(false);
   };
 
   const handleGenderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    form.setValue("gender", event.target.value);
+    form.setValue("gender", Number(event.target.value) as EGender);
   };
 
-  React.useEffect(() => {
-    dispatch(getProfileMethod());
-  }, [dispatch]);
+  const getGender = (value: any) => {
+    switch (Number(value)) {
+      case 0:
+        return "Nam";
+      case 1:
+        return "Nữ";
+      case 2:
+        return "Khác";
+      default:
+        return "";
+    }
+  };
 
   useEffect(() => {
-    form.reset({
-      firstName: currentUser?.firstName || undefined,
-      lastName: currentUser?.lastName || undefined,
-      email: currentUser?.email || undefined,
-      username: currentUser?.username || undefined,
-      phoneNumber: currentUser?.phoneNumber || undefined,
-      gender: EGender[currentUser?.gender || 2],
-    });
-  }, [currentUser, form]);
+    form.reset(defaultValues);
+  }, [currentUser, form, defaultValues]);
 
   return (
     <>
-      {requestStatus === ERequestStatus.PENDING && <Loading />}
       <div className="profile-page">
-        <AccountPageHeader
-          titleIcon={<i className="bi bi-person-fill"></i>}
-          headerTitle="My Profile"
-          btnTitle={isEdit ? "Save" : "Edit Profile"}
-          setShowDashboard={setShowDashboard}
-          handleBtnClick={handleEditSaveBtnClick}
-        />
+        <div className="account-page-header">
+          <div className="title-wrap">
+            <div className="title">
+              <span className="text">Profile</span>
+            </div>
+            <div
+              className="show-dashboard-btn"
+              onClick={() => setShowDashboard(true)}>
+              <i className="bi bi-list"></i>
+            </div>
+          </div>
 
+          <div className="btn-wrap">
+            {isEdit ? (
+              <div className="d-flex gap-2">
+                <Button
+                  className="custom-btn account-page-header-btn"
+                  onClick={handleEditCancel}>
+                  Cancel
+                </Button>
+
+                <Button
+                  className="custom-btn account-page-header-btn"
+                  onClick={handleEditSaveBtnClick}>
+                  Save
+                </Button>
+              </div>
+            ) : (
+              <Button
+                className="custom-btn account-page-header-btn"
+                onClick={() => setIsEdit(true)}>
+                Edit Profile
+              </Button>
+            )}
+          </div>
+        </div>
         <div className="profile-page-body">
           <div className="common-info">
             <Row>
-              <Col xs={12} md={6} className="mt-4">
+              <Col xs={12} md={12} className="mt-4">
                 <div
                   className="user-ava-card shadow-sm rounded"
                   style={{ backgroundColor: style.backgroundColor }}>
@@ -135,18 +184,17 @@ const ProfilePage = () => {
                       />
                     </div>
                     <div className="name-wrap">
-                      <span className="full-name"> {currentUser?.name} </span>
-                      <span className="username">
-                        {" "}
-                        {currentUser?.username}{" "}
+                      <span className="full-name">
+                        {`${currentUser?.firstName} ${currentUser?.lastName}`}
                       </span>
+                      <span className="username">{currentUser?.email}</span>
                     </div>
                   </div>
-                  <div className="member-type">Diamond User</div>
+                  {/* <div className="member-type">Diamond User</div> */}
                 </div>
               </Col>
 
-              <Col xs={12} md={6} className="mt-4">
+              {/* <Col xs={12} md={6} className="mt-4">
                 <div className="order-type-card-wrap">
                   <div
                     className="order-card-item shadow-sm rounded"
@@ -176,14 +224,13 @@ const ProfilePage = () => {
                     <span className="title">Cancelled</span>
                   </div>
                 </div>
-              </Col>
+              </Col> */}
             </Row>
           </div>
 
           <div
             className="personal-info mt-4 shadow-sm rounded p-4"
             style={{ backgroundColor: style.backgroundColor }}>
-            {/* onSubmit={form.handleSubmit(handleSaveProfile)} */}
             <Form>
               <Form.Group className="mt-3 form-gr">
                 <Form.Label htmlFor="first-name">
@@ -243,60 +290,38 @@ const ProfilePage = () => {
 
               <Form.Group className="mt-3 form-gr">
                 <Form.Label>{t("label.gender.title")}: </Form.Label>
-                <Form.Check>
-                  <Form.Check.Input
+                {!isEdit ? (
+                  <Form.Control
+                    id="gender"
                     disabled={!isEdit}
-                    onChange={handleGenderChange}
-                    defaultChecked={
-                      form.getValues("gender") === EGender[EGender.MALE]
-                    }
-                    value={EGender.MALE}
-                    name="gender"
-                    type="radio"
-                    id={`gender-${EGender.MALE}`}
+                    type="text"
+                    value={getGender(form.getValues("gender"))}
                   />
-                  <Form.Check.Label
-                    className="gender-item"
-                    htmlFor={`gender-${EGender.MALE}`}>
-                    {EGender[EGender.MALE].toLowerCase()}
-                  </Form.Check.Label>
-                </Form.Check>
-                <Form.Check>
-                  <Form.Check.Input
-                    disabled={!isEdit}
-                    onChange={handleGenderChange}
-                    defaultChecked={
-                      form.getValues("gender") === EGender[EGender.FEMALE]
-                    }
-                    value={EGender.FEMALE}
-                    name="gender"
-                    type="radio"
-                    id={`gender-${EGender.FEMALE}`}
-                  />
-                  <Form.Check.Label
-                    className="gender-item"
-                    htmlFor={`gender-${EGender.FEMALE}`}>
-                    {EGender[EGender.FEMALE].toLowerCase()}
-                  </Form.Check.Label>
-                </Form.Check>
-                <Form.Check>
-                  <Form.Check.Input
-                    disabled={!isEdit}
-                    onChange={handleGenderChange}
-                    defaultChecked={
-                      form.getValues("gender") === EGender[EGender.OTHER]
-                    }
-                    value={EGender.OTHER}
-                    name="gender"
-                    type="radio"
-                    id={`gender-${EGender.OTHER}`}
-                  />
-                  <Form.Check.Label
-                    className="gender-item"
-                    htmlFor={`gender-${EGender.OTHER}`}>
-                    {EGender[EGender.OTHER].toLowerCase()}
-                  </Form.Check.Label>
-                </Form.Check>
+                ) : (
+                  Object.keys(EGender).map(
+                    (item) =>
+                      !isNaN(Number(item)) && (
+                        <Form.Check key={item}>
+                          <Form.Check.Input
+                            disabled={!isEdit}
+                            onChange={handleGenderChange}
+                            defaultChecked={
+                              form.getValues("gender") === Number(item)
+                            }
+                            value={Number(item)}
+                            name="gender"
+                            type="radio"
+                            id={`gender-${item}`}
+                          />
+                          <Form.Check.Label
+                            className="gender-item"
+                            htmlFor={`gender-${item}`}>
+                            {getGender(item)}
+                          </Form.Check.Label>
+                        </Form.Check>
+                      )
+                  )
+                )}
               </Form.Group>
             </Form>
           </div>

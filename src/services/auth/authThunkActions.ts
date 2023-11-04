@@ -7,6 +7,7 @@ import {
   ILoginResponseError,
   IRegisterRequestData,
 } from "src/types/authTypes";
+import { getLocalStorage } from "src/utils/localStorage";
 
 export const loginMethod = createAsyncThunk(
   "auth/loginMethod",
@@ -42,6 +43,36 @@ export const getProfileMethod = createAsyncThunk(
   async (_, thunkApi) => {
     try {
       const response = await repositories.auth.get("profile");
+      return response.data;
+    } catch (err) {
+      const error = err as AxiosError<ILoginResponseError>;
+      return thunkApi.rejectWithValue(error.response);
+    }
+  }
+);
+
+export const updateProfileMethod = createAsyncThunk(
+  "auth/updateProfileMethod",
+  async (data: any, thunkApi) => {
+    try {
+      const response = await repositories.auth.patch(data, "profile");
+      console.log("response profile", response);
+      return response.data;
+    } catch (err) {
+      const error = err as AxiosError<ILoginResponseError>;
+      return thunkApi.rejectWithValue(error.response);
+    }
+  }
+);
+
+export const handleRefreshToken = createAsyncThunk(
+  "auth/handleRefreshToken",
+  async (_, thunkApi) => {
+    try {
+      const response = await repositories.auth.post(
+        getLocalStorage("refreshToken"),
+        "refresh-token"
+      );
       return response.data;
     } catch (err) {
       const error = err as AxiosError<ILoginResponseError>;

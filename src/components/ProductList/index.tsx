@@ -15,9 +15,7 @@ interface IProductListProps {
 const ProductList = ({ productList, isLoading }: IProductListProps) => {
   return (
     <div className="product-list ">
-      {isLoading ? (
-        <CatLoading />
-      ) : productList.length === 0 ? (
+      {productList.length === 0 ? (
         <NoItems />
       ) : (
         <Row className="">

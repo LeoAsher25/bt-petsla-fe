@@ -1,13 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { AxiosResponse } from "axios";
-import { t } from "i18next";
-import { toast } from "react-toastify";
-import { loginMethod } from "src/services/auth/authThunkActions";
 import {
-  ILoginRequestData,
-  ILoginResponseData,
-  ILoginResponseError,
-} from "src/types/authTypes";
+  getProfileMethod,
+  handleRefreshToken,
+  loginMethod,
+} from "src/services/auth/authThunkActions";
+import { ILoginResponseData, IUser } from "src/types/authTypes";
 import {
   getLocalStorage,
   removeLocalStorage,
@@ -17,11 +14,13 @@ import {
 interface IInitialState {
   accessToken?: string;
   refreshToken?: string;
+  currentUser: IUser | null;
 }
 
 const initialState: IInitialState = {
   accessToken: getLocalStorage("accessToken"),
   refreshToken: getLocalStorage("refreshToken"),
+  currentUser: null,
 };
 
 const authSlice = createSlice({
@@ -38,24 +37,27 @@ const authSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder
+    builder.addCase(loginMethod.fulfilled, (state, action) => {
+      const payload = action.payload as ILoginResponseData;
+      state.accessToken = payload.accessToken!;
+      state.refreshToken = payload.refreshToken!;
+      setLocalStorage("refreshToken", state.refreshToken);
+      setLocalStorage("accessToken", state.accessToken);
+    });
 
-      .addCase(loginMethod.fulfilled, (state, action) => {
-        const payload = action.payload as AxiosResponse<
-          ILoginResponseData,
-          ILoginRequestData
-        >;
-        state.accessToken = payload.data.accessToken!;
-        setLocalStorage("accessToken", state.accessToken);
-        toast.success(t("message.success.login"));
-      })
-      .addCase(loginMethod.rejected, (state, action) => {
-        const payload = action.payload as AxiosResponse<
-          ILoginResponseError,
-          ILoginRequestData
-        >;
-        toast.error(payload.data.detail);
-      });
+    builder.addCase(getProfileMethod.fulfilled, (state, action) => {
+      const payload = action.payload;
+      state.currentUser = payload;
+    });
+
+    builder.addCase(handleRefreshToken.fulfilled, (state, action) => {
+      const payload = action.payload;
+      console.log("payload: ", payload);
+      // state.accessToken = payload.accessToken!;
+      // state.refreshToken = payload.refreshToken!;
+      // setLocalStorage("refreshToken", state.refreshToken);
+      // setLocalStorage("accessToken", state.accessToken);
+    });
   },
 });
 
