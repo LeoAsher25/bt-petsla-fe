@@ -46,17 +46,22 @@ const authSlice = createSlice({
     });
 
     builder.addCase(getProfileMethod.fulfilled, (state, action) => {
-      const payload = action.payload;
-      state.currentUser = payload;
+      const payload = action.payload as IUser;
+      state.currentUser = {
+        ...payload,
+        fullName: String(
+          `${payload?.firstName || ""} ${payload?.lastName || ""}`
+        ).trim(),
+      };
     });
 
     builder.addCase(handleRefreshToken.fulfilled, (state, action) => {
       const payload = action.payload;
-      console.log("payload: ", payload);
-      // state.accessToken = payload.accessToken!;
-      // state.refreshToken = payload.refreshToken!;
-      // setLocalStorage("refreshToken", state.refreshToken);
-      // setLocalStorage("accessToken", state.accessToken);
+
+      state.accessToken = payload.accessToken!;
+      state.refreshToken = payload.refreshToken!;
+      setLocalStorage("refreshToken", state.refreshToken);
+      setLocalStorage("accessToken", state.accessToken);
     });
   },
 });

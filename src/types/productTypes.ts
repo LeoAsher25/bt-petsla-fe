@@ -6,8 +6,8 @@ export interface IProduct {
   price: number;
   image: string;
   stock: number;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
   categories: Object[];
 }
 
@@ -17,39 +17,48 @@ export interface ICartProduct {
   image: string;
   price: number;
   quantity: number;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface IOrderProduct {
-  product_id: number | string;
+  productId: number | string;
   quantity: number;
   price: number;
+  name: string;
+  image: string;
 }
 
 // type of order requested
 export interface IRequestedOrder {
   orderItems: IOrderProduct[];
-  number_phone: string;
+  fullName: string;
+  phoneNumber: string;
   address: string;
-  total_price: number;
-  note?: string;
+  note: string;
+  paymentMethod: EPaymentMethod;
+}
+
+export enum EPaymentMethod {
+  COD,
+  MOMO,
 }
 
 // type of order server send
 export interface IOrder {
   address: string;
-  created_at: string | null;
-  delivered_at: string | null;
+  createdAt: string | null;
+  deliveredAt: string | null;
   id: number | string;
-  is_delivered: boolean;
-  is_paid: boolean;
+  isDelivered: boolean;
+  isPaid: boolean;
   note?: string;
-  number_phone: string;
+  phoneNumber: string;
   orderItems: IOrderItem[];
-  paid_at: string | null;
-  total_price: number;
-  user: number;
+  paidAt: string | null;
+  totalCost: number;
+  fullName: string;
+  paymentMethod: EPaymentMethod;
 }
 
 export interface IOrderItem {

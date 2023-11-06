@@ -1,12 +1,12 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useOutletContext } from "react-router-dom";
 import { updateProfileMethod } from "src/services/auth/authThunkActions";
 import { RootState } from "src/stores/rootReducer";
-import { EGender } from "src/types/authTypes";
+import { EGender, IUser } from "src/types/authTypes";
 import Media from "src/utils/Media";
 import { handleError } from "src/utils/handleError";
 import {
@@ -61,13 +61,15 @@ const ProfilePage = () => {
   const [isEdit, setIsEdit] = useState(false);
 
   const defaultValues = useMemo(
-    () => ({
-      firstName: currentUser?.firstName || "",
-      lastName: currentUser?.lastName || "",
-      email: currentUser?.email || "",
-      phoneNumber: currentUser?.phoneNumber || "",
-      gender: currentUser?.gender,
-    }),
+    () =>
+      ({
+        firstName: currentUser?.firstName || "",
+        lastName: currentUser?.lastName || "",
+        email: currentUser?.email || "",
+        phoneNumber: currentUser?.phoneNumber || "",
+        gender: currentUser?.gender,
+        address: currentUser?.address || "",
+      } as Partial<IUser>),
     [currentUser]
   );
 
@@ -90,7 +92,7 @@ const ProfilePage = () => {
           payload,
           EGender[Number(payload?.gender) || -1]
         );
-        await dispatch(updateProfileMethod(payload));
+        await dispatch(updateProfileMethod(payload)).unwrap();
         form.reset({
           ...payload,
           gender: payload?.gender,
@@ -98,7 +100,6 @@ const ProfilePage = () => {
         setIsEdit(false);
         toast.success("Cập nhật thông tin thành công");
       } catch (error) {
-        console.log("error:", error);
         handleError(error);
       }
     }
@@ -111,6 +112,10 @@ const ProfilePage = () => {
 
   const handleGenderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     form.setValue("gender", Number(event.target.value) as EGender);
+  };
+
+  const handleChangeInputAvatar = (event: ChangeEvent<HTMLInputElement>) => {
+    console.log("event: ", event);
   };
 
   const getGender = (value: any) => {
@@ -182,11 +187,23 @@ const ProfilePage = () => {
                         src={accessToken ? Media.cuteCat : Media.noUser}
                         alt="User avatar"
                       />
+                      {isEdit && (
+                        <div className="avatar-edit-layer">
+                          <input
+                            type="file"
+                            name="upload-avatar"
+                            id="upload-avatar"
+                            hidden
+                            onChange={handleChangeInputAvatar}
+                          />
+                          <label htmlFor="upload-avatar">
+                            <i className="bi bi-pencil-square"></i>
+                          </label>
+                        </div>
+                      )}
                     </div>
                     <div className="name-wrap">
-                      <span className="full-name">
-                        {`${currentUser?.firstName} ${currentUser?.lastName}`}
-                      </span>
+                      <span className="full-name">{currentUser?.fullName}</span>
                       <span className="username">{currentUser?.email}</span>
                     </div>
                   </div>
@@ -276,7 +293,7 @@ const ProfilePage = () => {
               </Form.Group>
 
               <Form.Group className="mt-3 form-gr">
-                <Form.Label htmlFor="phone-number">Phone number: </Form.Label>
+                <Form.Label htmlFor="phone-number">Số điện thoại: </Form.Label>
                 <Form.Control
                   id="phone-number"
                   disabled={!isEdit}
@@ -322,6 +339,19 @@ const ProfilePage = () => {
                       )
                   )
                 )}
+              </Form.Group>
+
+              <Form.Group className="mt-3 form-gr">
+                <Form.Label htmlFor="address">Địa chỉ: </Form.Label>
+                <Form.Control
+                  id="address"
+                  disabled={!isEdit}
+                  type="text"
+                  {...form.register("address")}
+                />
+                <Form.Text className="text-danger">
+                  {form.formState.errors.address?.message}
+                </Form.Text>
               </Form.Group>
             </Form>
           </div>

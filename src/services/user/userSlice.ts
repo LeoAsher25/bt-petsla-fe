@@ -48,7 +48,11 @@ const userSlice = createSlice({
       state.currentUser = action.payload;
       const newCurrentOrderInfo: IOrderInfo = {
         _id: state.currentUser?._id as string,
-        name: state.currentUser?.name || "",
+        fullName: String(
+          `${state.currentUser?.firstName || ""} ${
+            state.currentUser?.lastName || ""
+          }`
+        ).trim(),
         address: state.currentUser?.address || "",
         phoneNumber: state.currentUser?.phoneNumber || "",
         note: state.currentOrderInfo?.note,

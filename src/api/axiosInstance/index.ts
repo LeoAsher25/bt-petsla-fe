@@ -1,9 +1,7 @@
 import axios from "axios";
 import queryString from "query-string";
 import { authActions } from "src/services/auth/authSlice";
-import { handleRefreshToken } from "src/services/auth/authThunkActions";
 import { store } from "src/stores/rootReducer";
-import { ILoginResponseData } from "src/types/authTypes";
 import { IErrorResponse } from "src/types/commonType";
 import { getLocalStorage } from "src/utils/localStorage";
 
@@ -20,7 +18,7 @@ axiosInstance.interceptors.request.use(
   async (config) => {
     let accessToken = getLocalStorage("accessToken");
     if (accessToken && config.headers) {
-      config.headers["Authorization"] = "Bearer " + accessToken.slice(0);
+      config.headers["Authorization"] = "Bearer " + accessToken;
     }
 
     return config;
@@ -29,11 +27,8 @@ axiosInstance.interceptors.request.use(
     return Promise.reject<IErrorResponse>(error.response);
   }
 );
-let refreshTokenRetryCount = 0;
-const maxRefreshTokenRetries = 1;
 
 axiosInstance.interceptors.response.use((res) => {
-  refreshTokenRetryCount = 0;
   return Promise.resolve(res);
 }, handleRepositoryError);
 
@@ -47,9 +42,9 @@ async function handleRepositoryError(error: any) {
       (originalConfig.url.includes("/auth/profile") ||
         !originalConfig.url.includes("/auth/")) &&
       error.response.status === 401 &&
-      refreshTokenRetryCount < maxRefreshTokenRetries
+      !originalConfig._retry
     ) {
-      refreshTokenRetryCount++;
+      originalConfig._retry = true;
       try {
         const response = await axiosInstance.post(
           "auth/refresh-token",
@@ -66,22 +61,25 @@ async function handleRepositoryError(error: any) {
           }
         );
         const { accessToken, refreshToken } = response.data;
-        refreshTokenRetryCount = 0;
         store?.dispatch(
           authActions.setItem({
             accessToken: accessToken,
             refreshToken: refreshToken,
           })
         );
-        refreshTokenRetryCount = 0;
 
-        return axiosInstance(originalConfig);
+        axiosInstance.defaults.headers.common["Authorization"] =
+          "Bearer " + accessToken;
+
+        originalConfig.headers["Authorization"] = "Bearer " + accessToken;
+
+        return axios(originalConfig);
       } catch (error) {
         return Promise.reject<IErrorResponse>(error as IErrorResponse);
       }
     }
 
-    refreshTokenRetryCount = 0;
+    // refreshTokenRetryCount = 0;
 
     // in case message is array of error (validation error)
     if (error?.response?.data?.message) {

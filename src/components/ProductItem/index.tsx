@@ -34,8 +34,8 @@ const ProductItem = (props: any) => {
       _id: product._id,
       name: product.name,
       image: product.image,
-      created_at: product.created_at,
-      updated_at: product.updated_at,
+      createdAt: product.createdAt,
+      updatedAt: product.updatedAt,
       price: product.price,
       quantity: 1,
     };

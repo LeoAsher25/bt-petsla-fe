@@ -41,6 +41,7 @@ const TopNav = () => {
 
   const handleCloseTopCart = () => {
     setShowCart(false);
+    console.log("first");
   };
 
   const handleSearch = (event: ChangeEvent<HTMLFormElement>) => {

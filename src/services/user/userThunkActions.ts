@@ -22,12 +22,13 @@ export const addOrderMethod = createAsyncThunk(
   "user/addOrderMethod",
   async (order: IRequestedOrder, thunkApi) => {
     try {
-      const response = await userApiMethod.addOrder(order);
-      console.log("add order", response);
+      const response = await repositories.order.create(order);
       return response.data;
     } catch (err) {
+      console.log("erro1r:", err);
       const error = err as AxiosError<ILoginResponseError>;
       return thunkApi.rejectWithValue(error.response);
+      // throw error.response;
     }
   }
 );

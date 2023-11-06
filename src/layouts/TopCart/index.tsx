@@ -48,6 +48,7 @@ const TopCart = ({ showCart, handleCloseTopCart }: ITopCartProps) => {
   };
 
   const handleViewCartClick = () => {
+    handleCloseTopCart();
     navigate(ERouterPath.CART);
   };
 
@@ -57,6 +58,7 @@ const TopCart = ({ showCart, handleCloseTopCart }: ITopCartProps) => {
     } else if (cartList.length <= 0) {
       toast.warning(t("message.warning.noProductInCart"));
     } else {
+      handleCloseTopCart();
       navigate(ERouterPath.CUSTOMER_INFO);
     }
   };

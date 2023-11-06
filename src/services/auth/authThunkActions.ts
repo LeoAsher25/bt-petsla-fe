@@ -4,6 +4,7 @@ import { authApiMethod } from "src/api/apiMethods";
 import repositories from "src/api/repositories";
 import {
   ILoginRequestData,
+  ILoginResponseData,
   ILoginResponseError,
   IRegisterRequestData,
 } from "src/types/authTypes";
@@ -70,10 +71,12 @@ export const handleRefreshToken = createAsyncThunk(
   async (_, thunkApi) => {
     try {
       const response = await repositories.auth.post(
-        getLocalStorage("refreshToken"),
+        {
+          refreshToken: getLocalStorage("refreshToken"),
+        },
         "refresh-token"
       );
-      return response.data;
+      return response.data as ILoginResponseData;
     } catch (err) {
       const error = err as AxiosError<ILoginResponseError>;
       return thunkApi.rejectWithValue(error.response);

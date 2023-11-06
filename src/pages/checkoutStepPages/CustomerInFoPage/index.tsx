@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import {
   Button,
   Card,
@@ -17,7 +17,11 @@ import CheckoutSteps from "src/pages/checkoutStepPages/components/CheckoutSteps"
 import { addOrderMethod } from "src/services/user/userThunkActions";
 import { RootState } from "src/stores/rootReducer";
 import { IOrderInfo } from "src/types/authTypes";
-import { ICartProduct, IRequestedOrder } from "src/types/productTypes";
+import {
+  EPaymentMethod,
+  ICartProduct,
+  IRequestedOrder,
+} from "src/types/productTypes";
 import { ERouterPath } from "src/types/route";
 import {
   useAppDispatch,
@@ -25,20 +29,24 @@ import {
 } from "src/utils/hook.ts/customReduxHook";
 import { customerInfoPageSchema } from "src/utils/yup";
 import "./CustomerInFoPage.scss";
+import { handleError } from "src/utils/handleError";
 const CustomerInFoPage = () => {
-  const { themeState, productState, userState } = useAppSelector(
+  const { themeState, productState, authState } = useAppSelector(
     (state: RootState) => state
   );
   const { style } = themeState;
   const { totalInCart, cartList } = productState;
-  const { currentOrderInfo } = userState;
+  const { currentUser } = authState;
 
-  const defaultValues: IOrderInfo = {
-    name: currentOrderInfo?.name || "",
-    phoneNumber: currentOrderInfo?.phoneNumber || "",
-    address: currentOrderInfo?.address || "",
-    note: currentOrderInfo?.note,
-  };
+  const defaultValues: IOrderInfo = useMemo(
+    () => ({
+      fullName: currentUser?.fullName,
+      phoneNumber: currentUser?.phoneNumber || "",
+      address: currentUser?.address || "",
+      note: "",
+    }),
+    [currentUser]
+  );
   const { t } = useTranslation();
   const form = useForm({
     resolver: yupResolver(customerInfoPageSchema),
@@ -52,32 +60,39 @@ const CustomerInFoPage = () => {
     navigate(ERouterPath.CART);
   };
 
-  const handleNext = (event: any): void => {
-    const order: IRequestedOrder = {
-      orderItems: cartList.map((product: ICartProduct) => ({
-        product_id: product._id,
-        quantity: product.quantity,
-        price: product.price,
-      })),
-      number_phone: form.getValues("phoneNumber"),
-      address: form.getValues("address"),
-      note: form.getValues("note"),
-      total_price: totalInCart.price,
-    };
-    if (totalInCart.quantity <= 0) {
-      toast.warning(t("message.noProductInCart"));
-    } else dispatch(addOrderMethod(order));
+  const handleNext = async () => {
+    try {
+      const order: IRequestedOrder = {
+        orderItems: cartList.map((product: ICartProduct) => ({
+          productId: product._id,
+          quantity: product.quantity,
+          price: product.price,
+          name: product.name,
+          image: product.image,
+        })),
+        phoneNumber: form.getValues("phoneNumber")!,
+        address: form.getValues("address")!,
+        note: form.getValues("note")!,
+        fullName: form.getValues("fullName")!,
+
+        paymentMethod: EPaymentMethod.COD,
+      };
+      if (totalInCart.quantity <= 0) {
+        toast.warning(t("message.noProductInCart"));
+      } else {
+        const response = await dispatch(addOrderMethod(order)).unwrap();
+        console.log("response: ", response);
+        toast.success("Đặt hàng thành công");
+      }
+    } catch (error) {
+      console.log("error dis", error);
+      handleError(error);
+    }
   };
 
   useEffect(() => {
-    form.setValue("name", currentOrderInfo?.name || "");
-  }, [form, currentOrderInfo]);
-
-  useEffect(() => {
-    return () => {
-      form.reset();
-    };
-  }, [form]);
+    form.reset(defaultValues);
+  }, [form, defaultValues]);
 
   return (
     <div className="cart-page">
@@ -106,13 +121,12 @@ const CustomerInFoPage = () => {
                         backgroundColor: style.backgroundColor1,
                         color: style.color,
                       }}
-                      disabled
                       type="text"
                       placeholder="Full name"
-                      {...form.register("name")}
+                      {...form.register("fullName")}
                     />
                     <Form.Text className="text-danger">
-                      {form.formState.errors.name?.message}
+                      {form.formState.errors.fullName?.message}
                     </Form.Text>
                   </Form.Group>
 
@@ -154,6 +168,7 @@ const CustomerInFoPage = () => {
                       style={{
                         backgroundColor: style.backgroundColor1,
                         color: style.color,
+                        height: "100px",
                       }}
                       {...form.register("note")}
                       className="cart-page-note"
@@ -206,14 +221,15 @@ const CustomerInFoPage = () => {
                         <Button
                           className="cart-page-btn custom-btn"
                           onClick={handleBack}>
-                          Back
+                          Quay lại
                         </Button>
                       </Col>
                       <Col>
                         <Button
                           type="submit"
-                          className="cart-page-btn checkout-btn custom-btn bg-fill">
-                          Next
+                          className="cart-page-btn checkout-btn custom-btn bg-fill"
+                          onClick={handleNext}>
+                          Tiếp tục
                         </Button>
                       </Col>
                     </Row>

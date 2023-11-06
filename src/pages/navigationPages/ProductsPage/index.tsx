@@ -97,9 +97,9 @@ const ProductsPage = ({ isSpecial = false }: ProductsPageProps) => {
           params.usesTypes = currentUsesFilter;
         }
 
-        const response = (await dispatch(
+        const response = await dispatch(
           getAllProductMethod({ params })
-        )) as PayloadAction<IGetListResponse<IProduct>>;
+        ).unwrap();
         setTotalItems(response.payload.totalRecords);
         setFilteredProductList(response.payload.dataList);
       } catch (error) {
@@ -121,9 +121,7 @@ const ProductsPage = ({ isSpecial = false }: ProductsPageProps) => {
 
   useEffect(() => {
     const getAllCategories = async () => {
-      const response = (await dispatch(
-        getAllProductCategories({})
-      )) as PayloadAction<IProductCategory[]>;
+      const response = await dispatch(getAllProductCategories({})).unwrap();
 
       setProductCategories(response.payload);
     };

@@ -43,8 +43,8 @@ const DetailProductPage = () => {
       _id: currentProduct._id,
       name: currentProduct.name,
       image: currentProduct.image,
-      created_at: currentProduct.created_at,
-      updated_at: currentProduct.updated_at,
+      createdAt: currentProduct.createdAt,
+      updatedAt: currentProduct.updatedAt,
       price: currentProduct.price,
       quantity: 1,
     };

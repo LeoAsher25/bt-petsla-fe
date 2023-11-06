@@ -72,8 +72,8 @@ const LoginModal = () => {
   const handleLogin = async (data: ILoginRequestData) => {
     try {
       setIsLoading(true);
-      await dispatch(loginMethod(data));
-      await dispatch(getProfileMethod());
+      await dispatch(loginMethod(data)).unwrap();
+      await dispatch(getProfileMethod()).unwrap();
     } catch (error) {
       handleError(error);
     } finally {

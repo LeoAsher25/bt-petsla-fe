@@ -48,14 +48,17 @@ const DetailOrderPage = () => {
     if (currentOrder) {
       const order: IRequestedOrder = {
         orderItems: currentOrder?.orderItems.map((product: IOrderItem) => ({
-          product_id: product._id,
+          productId: product._id,
           quantity: product.quantity,
+          name: product.name,
+          image: product.image,
           price: Number(product.price),
         })),
-        number_phone: currentOrder?.number_phone || "",
+        phoneNumber: currentOrder?.phoneNumber || "",
         address: currentOrder?.address || "",
-        note: currentOrder?.note,
-        total_price: currentOrder?.total_price,
+        note: currentOrder?.note!,
+        fullName: currentOrder?.fullName!,
+        paymentMethod: currentOrder?.paymentMethod!,
       };
 
       dispatch(addOrderMethod(order));
@@ -90,7 +93,7 @@ const DetailOrderPage = () => {
               <div className="header-item order-placed">
                 <span className="title">Place on: </span>
                 <span className="value">
-                  {moment(currentOrder?.created_at || "").format(
+                  {moment(currentOrder?.createdAt || "").format(
                     "DD-MM-YYYY HH:mm"
                   )}
                 </span>
@@ -98,11 +101,11 @@ const DetailOrderPage = () => {
               <div className="header-item order-status">
                 <span className="title">Status: </span>
                 <span className="value">
-                  {currentOrder?.is_paid ? (
+                  {currentOrder?.isPaid ? (
                     <Badge pill bg="success">
                       {EOrderStatus[EOrderStatus.DELIVERED].toLowerCase()}
                     </Badge>
-                  ) : currentOrder?.is_delivered ? (
+                  ) : currentOrder?.isDelivered ? (
                     <Badge pill bg="info">
                       {EOrderStatus[EOrderStatus.SHIPPING].toLowerCase()}
                     </Badge>
@@ -168,7 +171,7 @@ const DetailOrderPage = () => {
 
                   <li className="info-item">
                     <span className="title">Phone Number: </span>
-                    <span className="value">{currentOrder?.number_phone}</span>
+                    <span className="value">{currentOrder?.phoneNumber}</span>
                   </li>
 
                   {currentOrder?.note && (
@@ -203,7 +206,7 @@ const DetailOrderPage = () => {
                     "title.totalPrice"
                   )}:`}</span>
                   <span className="total-value">
-                    {`${Number(currentOrder?.total_price).toLocaleString()}đ`}
+                    {`${Number(currentOrder?.totalCost).toLocaleString()}đ`}
                   </span>
                 </div>
               </div>

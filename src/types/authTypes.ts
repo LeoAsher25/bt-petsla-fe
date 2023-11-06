@@ -40,6 +40,8 @@ export interface IUser {
   name: string;
   email: string;
 
+  fullName?: string;
+
   _id?: string | number;
   gender?: EGender;
   role?: EUserRole;
@@ -49,10 +51,10 @@ export interface IUser {
 
 export interface IOrderInfo {
   _id?: number | string;
-  name: string;
+  fullName?: string;
 
-  address: string;
-  phoneNumber: string;
+  address?: string;
+  phoneNumber?: string;
   note?: string;
 }
 
