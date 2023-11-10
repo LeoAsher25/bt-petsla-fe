@@ -156,20 +156,20 @@ const ProfilePage = () => {
                 <Button
                   className="custom-btn account-page-header-btn"
                   onClick={handleEditCancel}>
-                  Cancel
+                  Hủy
                 </Button>
 
                 <Button
                   className="custom-btn account-page-header-btn"
                   onClick={handleEditSaveBtnClick}>
-                  Save
+                  Lưu
                 </Button>
               </div>
             ) : (
               <Button
                 className="custom-btn account-page-header-btn"
                 onClick={() => setIsEdit(true)}>
-                Edit Profile
+                Chỉnh sửa
               </Button>
             )}
           </div>

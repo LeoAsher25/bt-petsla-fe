@@ -111,12 +111,9 @@ const userSlice = createSlice({
         state.requestStatus = ERequestStatus.REJECTED;
       })
 
-      .addCase(getOneOrderMethod.pending, (state) => {
-        state.requestStatus = ERequestStatus.PENDING;
-      })
-
       .addCase(getOneOrderMethod.fulfilled, (state, action) => {
         state.requestStatus = ERequestStatus.FULFILLED;
+        console.log("getOneOrderMethod: ", action.payload);
         state.currentOrder = action.payload;
       })
 

@@ -80,12 +80,10 @@ const CustomerInFoPage = () => {
       if (totalInCart.quantity <= 0) {
         toast.warning(t("message.noProductInCart"));
       } else {
-        const response = await dispatch(addOrderMethod(order)).unwrap();
-        console.log("response: ", response);
+        await dispatch(addOrderMethod(order)).unwrap();
         toast.success("Đặt hàng thành công");
       }
     } catch (error) {
-      console.log("error dis", error);
       handleError(error);
     }
   };

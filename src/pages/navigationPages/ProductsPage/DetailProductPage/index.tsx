@@ -25,7 +25,6 @@ import "./DetailProductPage.scss";
 
 const DetailProductPage = () => {
   const { id } = useParams();
-  console.log("id: ", id);
   const dispatch = useAppDispatch();
   const { currentProduct, requestStatus } = useAppSelector(
     (state: RootState) => state.productState
@@ -93,7 +92,7 @@ const DetailProductPage = () => {
             <div className="product-detail-infor">
               <h2 className="product-title">{currentProduct.name}</h2>
               <div className="product-price">
-                <span>{currentProduct.price.toLocaleString()}đ</span>
+                <span>{currentProduct.price}đ</span>
               </div>
 
               <div className="btn-wrap">

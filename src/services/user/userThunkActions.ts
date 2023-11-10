@@ -1,6 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { AxiosError } from "axios";
-import { userApiMethod } from "src/api/apiMethods";
+import { AxiosError, AxiosRequestConfig } from "axios";
 import repositories from "src/api/repositories";
 import { ILoginResponseError } from "src/types/authTypes";
 import { IRequestedOrder } from "src/types/productTypes";
@@ -25,7 +24,6 @@ export const addOrderMethod = createAsyncThunk(
       const response = await repositories.order.create(order);
       return response.data;
     } catch (err) {
-      console.log("erro1r:", err);
       const error = err as AxiosError<ILoginResponseError>;
       return thunkApi.rejectWithValue(error.response);
       // throw error.response;
@@ -35,10 +33,9 @@ export const addOrderMethod = createAsyncThunk(
 
 export const getAllOrderMethod = createAsyncThunk(
   "user/getAllOrderMethod",
-  async (_, thunkApi) => {
+  async (query: AxiosRequestConfig, thunkApi) => {
     try {
-      const response = await userApiMethod.getAllOrder();
-      console.log("get all order", response.data);
+      const response = await repositories.order.getMany(query);
       return response.data;
     } catch (err) {
       const error = err as AxiosError<ILoginResponseError>;
@@ -49,9 +46,10 @@ export const getAllOrderMethod = createAsyncThunk(
 
 export const getOneOrderMethod = createAsyncThunk(
   "user/getOneOrderMethod",
-  async (id: number | string, thunkApi) => {
+  async (id: string, thunkApi) => {
     try {
-      const response = await userApiMethod.getOneOrder(id);
+      const response = await repositories.order.getOne(id);
+
       return response.data;
     } catch (err) {
       const error = err as AxiosError<ILoginResponseError>;

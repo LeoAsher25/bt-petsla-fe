@@ -1,7 +1,7 @@
-import { PayloadAction } from "@reduxjs/toolkit";
 import { useEffect, useState } from "react";
 import { Container, Form } from "react-bootstrap";
 import { useLocation, useSearchParams } from "react-router-dom";
+import CatLoading from "src/components/Loading/CatLoading";
 import ProductList from "src/components/ProductList";
 import CustomPagination from "src/components/customComponents/CustomPagination";
 import { DEFAULT_ITEMS_PER_PAGE } from "src/constants";
@@ -10,19 +10,17 @@ import {
   getAllProductMethod,
 } from "src/services/product/productThunkActions";
 import { AppDispatch, RootState } from "src/stores/rootReducer";
-import { IGetListResponse } from "src/types/commonType";
 import {
   EIProductCategoryType,
   IProduct,
   IProductCategory,
 } from "src/types/productTypes";
+import { handleError } from "src/utils/handleError";
 import {
   useAppDispatch,
   useAppSelector,
 } from "src/utils/hook.ts/customReduxHook";
 import "./ProductsPage.scss";
-import { handleError } from "src/utils/handleError";
-import CatLoading from "src/components/Loading/CatLoading";
 
 const sortList = [
   {
@@ -51,7 +49,7 @@ interface ProductsPageProps {
   isSpecial?: boolean;
 }
 
-const ProductsPage = ({ isSpecial = false }: ProductsPageProps) => {
+const ProductsPage = ({ isSpecial }: ProductsPageProps) => {
   const dispatch: AppDispatch = useAppDispatch();
   const { themeState } = useAppSelector((state: RootState) => state);
 
@@ -100,8 +98,9 @@ const ProductsPage = ({ isSpecial = false }: ProductsPageProps) => {
         const response = await dispatch(
           getAllProductMethod({ params })
         ).unwrap();
-        setTotalItems(response.payload.totalRecords);
-        setFilteredProductList(response.payload.dataList);
+
+        setTotalItems(response?.totalRecords);
+        setFilteredProductList(response?.dataList);
       } catch (error) {
         handleError(error);
       } finally {
@@ -121,10 +120,14 @@ const ProductsPage = ({ isSpecial = false }: ProductsPageProps) => {
 
   useEffect(() => {
     const getAllCategories = async () => {
-      const response = await dispatch(getAllProductCategories({})).unwrap();
-
-      setProductCategories(response.payload);
+      try {
+        const response = await dispatch(getAllProductCategories({})).unwrap();
+        setProductCategories(response);
+      } catch (error) {
+        handleError(error);
+      }
     };
+
     getAllCategories();
   }, [dispatch]);
 

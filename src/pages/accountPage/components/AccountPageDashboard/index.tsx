@@ -22,21 +22,21 @@ const AccountPageDashboard = ({ setShowDashboard }: IProps) => {
         <li onClick={handleDashboardItemClick} className="dashboard-nav-item">
           <StyledLink to={ERouterPath.PROFILE}>
             <i className="bi bi-person"></i>
-            <span className="title">Profile</span>
+            <span className="title">Thông tin cá nhân</span>
           </StyledLink>
         </li>
         <li onClick={handleDashboardItemClick} className="dashboard-nav-item">
           <StyledLink to={ERouterPath.ORDERS}>
             <i className="bi bi-bag"></i>
-            <span className="title">Orders</span>
+            <span className="title">Đơn hàng</span>
           </StyledLink>
         </li>
-        <li onClick={handleDashboardItemClick} className="dashboard-nav-item">
+        {/* <li onClick={handleDashboardItemClick} className="dashboard-nav-item">
           <StyledLink to={ERouterPath.WISH_LIST}>
             <i className="bi bi-heart"></i>
-            <span className="title">Wishlist</span>
+            <span className="title">Danh sách yêu thích</span>
           </StyledLink>
-        </li>
+        </li> */}
       </ul>
     </div>
   );

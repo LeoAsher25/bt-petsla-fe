@@ -1,20 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useOutletContext } from "react-router-dom";
 import CustomPagination from "src/components/customComponents/CustomPagination";
-import Loading from "src/components/Loading";
 import NoItems from "src/components/NoItems";
 
+import CatLoading from "src/components/Loading/CatLoading";
+import { DEFAULT_ITEMS_PER_PAGE } from "src/constants";
 import AccountPageHeader from "src/pages/accountPage/components/AccountPageHeader";
 import OrderItem from "src/pages/accountPage/components/OrderItem";
 import { getAllOrderMethod } from "src/services/user/userThunkActions";
-import { RootState } from "src/stores/rootReducer";
-import { ERequestStatus } from "src/types/commonType";
 import { IOrder } from "src/types/productTypes";
-import {
-  useAppDispatch,
-  useAppSelector,
-} from "src/utils/hook.ts/customReduxHook";
+import { handleError } from "src/utils/handleError";
+import { useAppDispatch } from "src/utils/hook.ts/customReduxHook";
 import "./OrdersPages.scss";
 
 const OrdersPages = () => {
@@ -24,55 +21,77 @@ const OrdersPages = () => {
 
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const { userState } = useAppSelector((state: RootState) => state);
-  const { requestStatus, orders } = userState;
 
-  React.useEffect(() => {
-    dispatch(getAllOrderMethod());
-  }, [dispatch]);
-
-  const [itemsPerPage, setItemsPerPage] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirsItem = indexOfLastItem - itemsPerPage;
-  const currentOrders = orders.slice(indexOfFirsItem, indexOfLastItem);
-  const listItemsPerPage = [5, 10, 15];
+  const [filteredProductList, setFilteredProductList] = useState<IOrder[]>([]);
+
+  useEffect(() => {
+    const getDataList = async () => {
+      try {
+        setIsLoading(true);
+        const params: Record<string, any> = {
+          page: currentPage - 1,
+          limit: DEFAULT_ITEMS_PER_PAGE,
+        };
+
+        const response = await dispatch(getAllOrderMethod({ params })).unwrap();
+
+        setTotalItems(response?.totalRecords);
+        setFilteredProductList(response?.dataList);
+      } catch (error) {
+        handleError(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    getDataList();
+  }, [dispatch, currentPage]);
 
   return (
     <div className="orders-page">
-      {requestStatus === ERequestStatus.PENDING && <Loading />}
       <AccountPageHeader
         titleIcon={<i className="bi bi-bag-fill"></i>}
         headerTitle="My Orders"
         setShowDashboard={setShowDashboard}
       />
 
-      <div className="orders-table">
-        <div className="orders-header order-row">
-          <div className="order-cell order-index">#</div>
-          <div className="order-cell order-id">Order</div>
-          <div className="order-cell order-status">Status</div>
-          <div className="order-cell order-time">Time Placed</div>
-          <div className="order-cell order-price">Total Price</div>
-        </div>
+      {isLoading ? (
+        <CatLoading />
+      ) : (
+        <>
+          <div className="orders-table">
+            <div className="orders-header order-row">
+              {/* <div className="order-cell order-index">#</div> */}
+              <div className="order-cell order-id">ID</div>
+              <div className="order-cell order-time">Ngày đặt hàng</div>
+              <div className="order-cell order-price">Tổng tiền</div>
+              <div className="order-cell order-address">Địa chỉ</div>
+              <div className="order-cell order-status">TT đơn hàng</div>
+              <div className="order-cell order-status">TT thanh toán</div>
+            </div>
 
-        <div className="orders-list">
-          {currentOrders.length <= 0 ? (
-            <NoItems message={t("message.warning.noOrder")} />
-          ) : (
-            currentOrders.map((order: IOrder, index) => (
-              <OrderItem key={order.id} order={order} index={index} />
-            ))
-          )}
-        </div>
+            <div className="orders-list">
+              {filteredProductList.length <= 0 ? (
+                <NoItems message={t("message.warning.noOrder")} />
+              ) : (
+                filteredProductList.map((order: IOrder, index) => (
+                  <OrderItem key={order._id} order={order} index={index} />
+                ))
+              )}
+            </div>
 
-        <CustomPagination
-          totalItems={12}
-          setCurrentPage={setCurrentPage}
-          currentPage={currentPage}
-        />
-      </div>
+            <CustomPagination
+              totalItems={totalItems}
+              setCurrentPage={setCurrentPage}
+              currentPage={currentPage}
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 };

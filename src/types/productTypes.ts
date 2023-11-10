@@ -46,36 +46,42 @@ export enum EPaymentMethod {
 
 // type of order server send
 export interface IOrder {
-  address: string;
-  createdAt: string | null;
-  deliveredAt: string | null;
-  id: number | string;
-  isDelivered: boolean;
-  isPaid: boolean;
-  note?: string;
-  phoneNumber: string;
-  orderItems: IOrderItem[];
-  paidAt: string | null;
-  totalCost: number;
+  _id: string;
+  idReadable: string;
   fullName: string;
+  address: string;
+  phoneNumber: string;
+  note: string;
+  totalCost: number;
   paymentMethod: EPaymentMethod;
+  customerId: string;
+  orderStatus: EOrderStatus;
+  paymentStatus: EPaymentStatus;
+  orderItems: IOrderItem[];
+  createdAt: string;
 }
 
 export interface IOrderItem {
-  _id: number | string;
-  name: string;
-  quantity: number;
-  price: string;
-  image: string;
-  product: number;
-  order: number;
+  productId?: string;
+  _id: string;
+  name?: string;
+  image?: string;
+  price?: number;
+  quantity?: number;
 }
 
 export enum EOrderStatus {
   PENDING,
   SHIPPING,
   DELIVERED,
-  CANCELLEDf,
+  CANCELLED,
+}
+
+export enum EPaymentStatus {
+  UNPAID,
+  PAID,
+  REFUNDING,
+  REFUNDED,
 }
 
 export enum EIProductCategoryType {

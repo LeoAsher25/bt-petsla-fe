@@ -1,4 +1,4 @@
-@import 'src/variable.scss';
+@import "src/variable.scss";
 
 .detail-order-page {
   .detail-order-body {
@@ -8,17 +8,6 @@
       align-items: center;
       justify-content: space-between;
       padding: toRem(4) 0;
-
-      .header-item {
-        display: flex;
-        align-items: center;
-        margin: toRem(3) toRem(6) toRem(3) 0;
-
-        .title {
-          opacity: 0.8;
-          margin-right: 3px;
-        }
-      }
     }
 
     .detail-order-item {
@@ -84,6 +73,29 @@
     }
   }
 
+  .header-item {
+    display: flex;
+    align-items: center;
+    margin: toRem(4) toRem(6) 0 0;
+
+    .title {
+      margin-right: 3px;
+      font-weight: 600;
+    }
+  }
+
+  .header-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .total-value {
+      font-weight: 600;
+      color: $primary-color;
+      margin-left: 2px;
+    }
+  }
+
   .detail-order-info {
     .row {
       flex-wrap: wrap-reverse;
@@ -102,23 +114,11 @@
         .shipping-info-body {
           .info-item {
             list-style: inside;
+            margin-top: 4px;
 
             .title {
               font-weight: 600;
             }
-          }
-        }
-      }
-
-      .info-total-summary {
-        .header-wrap {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-
-          .total-value {
-            font-weight: 600;
-            color: $primary-color;
           }
         }
       }
