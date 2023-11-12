@@ -16,7 +16,7 @@ ReactDOM.render(
     <Suspense fallback={<Loading />}>
       <Provider store={store}>
         <App />
-        <ToastContainer position={toast.POSITION.TOP_RIGHT} autoClose={2500} />
+        <ToastContainer position={toast.POSITION.TOP_RIGHT} autoClose={2000} />
       </Provider>
     </Suspense>
   </React.StrictMode>,

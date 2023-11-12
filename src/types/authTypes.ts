@@ -4,10 +4,10 @@ export interface ILoginRequestData {
 }
 
 export interface IRegisterRequestData {
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  username: string;
+  phoneNumber: string;
   password: string;
 }
 
@@ -15,7 +15,7 @@ export interface IRegisterFormData {
   firstName: string;
   lastName: string;
   email: string;
-  username: string;
+  phoneNumber: string;
   password: string;
 }
 

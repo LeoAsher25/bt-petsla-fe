@@ -28,9 +28,8 @@ export const registerSchema = yup.object().shape({
 
   username: yup
     .string()
-    .min(8, "Username must be between 8-20 characters!")
-    .max(20, "Username must be between 8-20 characters!")
-    .required("Username is required!"),
+
+    .required("Phone number is required!"),
 
   password: yup
     .string()
@@ -63,7 +62,7 @@ export const customerInfoPageSchema = yup.object().shape({
     .required("Phone number is required!")
     .matches(/^[0-9]+$/, "Phone number must be number!"),
   address: yup.string().required("Address is required!"),
-  note: yup.string(),
+  note: yup.string().max(500, "Tối đa 500 kí tự"),
 });
 
 // .matches(

@@ -24,6 +24,7 @@ import REGEX from "src/utils/validateRegex";
 import * as yup from "yup";
 import "./LoginModal.scss";
 import { handleError } from "src/utils/handleError";
+import { toast } from "react-toastify";
 
 const LoginModal = () => {
   const defaultValues: ILoginRequestData = {
@@ -72,8 +73,9 @@ const LoginModal = () => {
   const handleLogin = async (data: ILoginRequestData) => {
     try {
       setIsLoading(true);
-      await dispatch(loginMethod(data)).unwrap();
+      await dispatch(loginMethod(form.getValues())).unwrap();
       await dispatch(getProfileMethod()).unwrap();
+      toast.success("Đăng nhập thành công");
     } catch (error) {
       handleError(error);
     } finally {

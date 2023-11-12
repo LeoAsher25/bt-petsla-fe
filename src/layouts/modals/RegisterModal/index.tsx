@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { Form, Modal } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -19,13 +19,15 @@ import {
 } from "src/utils/hook.ts/customReduxHook";
 import { registerSchema } from "src/utils/yup";
 import "./RegisterModal.scss";
+import { handleError } from "src/utils/handleError";
+import { toast } from "react-toastify";
 
 const RegisterModal = () => {
   const defaultValues: IRegisterFormData = {
     firstName: "",
     lastName: "",
     email: "",
-    username: "",
+    phoneNumber: "",
     password: "",
   };
 
@@ -36,6 +38,8 @@ const RegisterModal = () => {
   const navigate = useNavigate();
 
   const { t } = useTranslation();
+
+  const [loading, setLoading] = useState(false);
 
   const form = useForm({
     resolver: yupResolver(registerSchema),
@@ -54,14 +58,18 @@ const RegisterModal = () => {
     dispatch(setLoginModalIsOpen(true));
   };
 
-  const handleLogin = (data: IRegisterFormData) => {
-    dispatch(
-      registerMethod({
-        ...data,
-        first_name: data.firstName,
-        last_name: data.lastName,
-      })
-    );
+  const handleLogin = async () => {
+    try {
+      setLoading(true);
+      await dispatch(registerMethod(form.getValues())).unwrap();
+      toast.success("Đăng ký tài khoản thành công");
+      dispatch(setRegisterModalIsOpen(false));
+      dispatch(setLoginModalIsOpen(true));
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      handleError(error);
+    }
   };
 
   return (
@@ -73,6 +81,7 @@ const RegisterModal = () => {
       <AuthFormModal
         modalTitle={t("title.register")}
         form={form}
+        isLoading={loading}
         handleLogin={handleLogin}
         handleClose={handleClose}
         handleChangeModal={handleChangeToLogin}
@@ -113,15 +122,15 @@ const RegisterModal = () => {
           </Form.Text>
         </Form.Group>
 
-        <Form.Group className="mt-3" controlId="username">
+        <Form.Group className="mt-3" controlId="phoneNumber">
           <Form.Control
             type="text"
-            {...form.register("username")}
-            name="username"
-            placeholder={t("label.username")}
+            {...form.register("phoneNumber")}
+            name="phoneNumber"
+            placeholder={t("label.phoneNumber")}
           />
           <Form.Text className="text-danger">
-            {form.formState.errors.username?.message}
+            {form.formState.errors.phoneNumber?.message}
           </Form.Text>
         </Form.Group>
 

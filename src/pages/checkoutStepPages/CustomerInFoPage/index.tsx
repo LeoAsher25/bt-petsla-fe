@@ -30,6 +30,7 @@ import {
 import { customerInfoPageSchema } from "src/utils/yup";
 import "./CustomerInFoPage.scss";
 import { handleError } from "src/utils/handleError";
+import { clearCart, setItem } from "src/services/product/productSlice";
 const CustomerInFoPage = () => {
   const { themeState, productState, authState } = useAppSelector(
     (state: RootState) => state
@@ -82,6 +83,8 @@ const CustomerInFoPage = () => {
       } else {
         await dispatch(addOrderMethod(order)).unwrap();
         toast.success("Đặt hàng thành công");
+        dispatch(clearCart());
+        navigate(ERouterPath.SHOP);
       }
     } catch (error) {
       handleError(error);

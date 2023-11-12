@@ -41,10 +41,14 @@ const LowerTopNav = () => {
           </li>
 
           <li className="top-nav-item">
+            <StyledLink to={ERouterPath.CART}> {t("title.cart")} </StyledLink>
+          </li>
+
+          {/* <li className="top-nav-item">
             <StyledLink to={ERouterPath.CONTACT}>
               {t("title.contact")}
             </StyledLink>
-          </li>
+          </li> */}
 
           <li className="top-nav-item">
             <StyledLink to={`${ERouterPath.ACCOUNT}/${ERouterPath.PROFILE}`}>

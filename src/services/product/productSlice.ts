@@ -69,6 +69,9 @@ const productSlice = createSlice({
         setLocalStorage("cartList", state.cartList);
       }
     },
+    setItem(state, action) {
+      Object.assign(state, action.payload);
+    },
 
     removeFromCart: (state, action) => {
       const id: number | string = action.payload;
@@ -106,6 +109,15 @@ const productSlice = createSlice({
         state.totalInCart = calculateTotalInCart(state.cartList);
         setLocalStorage("cartList", state.cartList);
       }
+    },
+
+    clearCart: (state) => {
+      state.cartList = [];
+      state.totalInCart = {
+        price: 0,
+        quantity: 0,
+      };
+      setLocalStorage("cartList", []);
     },
 
     resetCurrentProduct: (state) => {
@@ -150,4 +162,6 @@ export const {
   handleMinus,
   removeFromCart,
   resetCurrentProduct,
+  setItem,
+  clearCart,
 } = productSlice.actions;

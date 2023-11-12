@@ -34,7 +34,7 @@ const AuthFormModal = ({
   return (
     <Form
       style={{ backgroundColor: style.backgroundColor, color: style.color }}
-      onSubmit={form.handleSubmit(handleLogin)}
+      onSubmit={(e) => e.preventDefault()}
       className="auth-form-modal">
       <Modal.Header
         className="auth-modal-header"
@@ -45,10 +45,14 @@ const AuthFormModal = ({
       <Modal.Body className="">{children}</Modal.Body>
 
       <div className="action-wrap">
-        <Button className="btn-item mt-2 custom-btn bg-fill" type="submit">
+        <Button
+          className="btn-item mt-2 custom-btn bg-fill"
+          type="submit"
+          onClick={handleLogin}>
           {isLoading ? (
             <>
-              <Spinner animation="border" size="sm" /> Loading...
+              <Spinner animation="border" size="sm" />{" "}
+              {`Đang ${modalTitle.toLowerCase()}`}
             </>
           ) : (
             modalTitle || "Save"

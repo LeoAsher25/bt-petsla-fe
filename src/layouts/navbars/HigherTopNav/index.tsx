@@ -18,6 +18,7 @@ import {
 } from "src/utils/hook.ts/customReduxHook";
 import Media from "src/utils/Media";
 import "./HigherTopNav.scss";
+import { toast } from "react-toastify";
 
 const HigherTopNav = () => {
   const { themeState, authState } = useAppSelector((state: RootState) => state);
@@ -42,6 +43,7 @@ const HigherTopNav = () => {
     dispatch(setCurrentCustomerInfo(null));
     dispatch(setCurrentUser(null));
     dispatch(authActions.logoutMethod());
+    toast.success("Đăng xuất thành công");
   };
 
   return (

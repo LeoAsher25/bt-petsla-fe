@@ -1,6 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
-import { authApiMethod } from "src/api/apiMethods";
 import repositories from "src/api/repositories";
 import {
   ILoginRequestData,
@@ -27,7 +26,7 @@ export const registerMethod = createAsyncThunk(
   "auth/registerMethod",
   async (data: IRegisterRequestData, thunkApi) => {
     try {
-      const response = await authApiMethod.register(data);
+      const response = await repositories.auth.post(data, "register");
       return response;
     } catch (err) {
       const error = err as AxiosError<
