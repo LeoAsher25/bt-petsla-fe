@@ -11,10 +11,10 @@ import { setLocalStorage } from "./../../utils/localStorage";
 
 interface IInitialState {
   productList: IProduct[];
-  currentProduct: IProduct;
+  currentProduct?: IProduct;
   cartList: ICartProduct[];
-  totalInCart: ITotalInCart;
-  requestStatus: ERequestStatus;
+  totalInCart?: ITotalInCart;
+  requestStatus?: ERequestStatus;
 }
 
 interface ITotalInCart {
@@ -42,17 +42,7 @@ const calculateTotalInCart = (cartList: ICartProduct[]): ITotalInCart => {
 
 const initialState: IInitialState = {
   productList: [],
-  currentProduct: {
-    _id: "",
-    categories: [],
-    createdAt: "",
-    description: "",
-    image: "",
-    updatedAt: "",
-    price: 0,
-    name: "",
-    stock: 0,
-  },
+  currentProduct: undefined,
   cartList: getLocalStorage("cartList") || [],
   totalInCart: {
     quantity: calculateTotalInCart(getLocalStorage("cartList") || []).quantity,
@@ -119,17 +109,7 @@ const productSlice = createSlice({
     },
 
     resetCurrentProduct: (state) => {
-      state.currentProduct = {
-        _id: "0",
-        categories: [],
-        image: "",
-        description: "",
-        createdAt: "",
-        updatedAt: "",
-        price: 0,
-        name: "",
-        stock: 0,
-      };
+      state.currentProduct = undefined;
     },
   },
   extraReducers: (builder) => {

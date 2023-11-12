@@ -116,7 +116,7 @@ const TopNav = () => {
               {t("title.cart")}
             </div>
             <span style={{ border: `2px solid ${style.backgroundColor}` }}>
-              {totalInCart.quantity}
+              {totalInCart?.quantity}
             </span>
           </div>
         </div>

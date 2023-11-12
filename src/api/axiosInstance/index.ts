@@ -38,9 +38,10 @@ async function handleRepositoryError(error: any) {
 
   if (error.response) {
     // Access token was expired
+
     if (
-      (originalConfig.url.includes("/auth/profile") ||
-        !originalConfig.url.includes("/auth/")) &&
+      (originalConfig.url.includes("auth/profile") ||
+        !originalConfig.url.includes("auth/")) &&
       error.response.status === 401 &&
       !originalConfig._retry
     ) {
@@ -75,6 +76,8 @@ async function handleRepositoryError(error: any) {
 
         return axios(originalConfig);
       } catch (error) {
+        console.log("test", error);
+
         return Promise.reject<IErrorResponse>(error as IErrorResponse);
       }
     }

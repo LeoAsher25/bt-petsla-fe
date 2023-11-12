@@ -26,7 +26,7 @@ export const store = configureStore({
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 export const requestStatusSelector = (state: RootState) => {
-  const listStatus: ERequestStatus[] = [state.productState.requestStatus];
+  const listStatus: ERequestStatus[] = [state.productState.requestStatus!];
 
   const status: ERequestStatus = listStatus.some(
     (_status: ERequestStatus) => _status === ERequestStatus.PENDING

@@ -8,7 +8,9 @@ export interface IProduct {
   stock: number;
   createdAt: string;
   updatedAt: string;
-  categories: Object[];
+  usesTypes: IProductCategory[];
+  petType: IProductCategory;
+  isSpecial: boolean;
 }
 
 export interface ICartProduct {
@@ -86,7 +88,7 @@ export enum EPaymentStatus {
 
 export enum EIProductCategoryType {
   BY_PET,
-  BY_USAGE,
+  BY_USES,
 }
 
 export interface IProductCategory {

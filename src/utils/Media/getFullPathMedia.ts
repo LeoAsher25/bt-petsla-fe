@@ -1,4 +1,4 @@
-export default function getFullPathMedia(path: string) {
+export default function getFullPathMedia(path?: string) {
   if (!path) {
     return null;
   }

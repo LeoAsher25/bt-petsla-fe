@@ -216,7 +216,7 @@ const ProductsPage = ({ isSpecial }: ProductsPageProps) => {
                         name: "All",
                       },
                       ...productCategories?.filter(
-                        (item) => item.type === EIProductCategoryType.BY_USAGE
+                        (item) => item.type === EIProductCategoryType.BY_USES
                       ),
                     ].map((sortItem) => (
                       <option key={sortItem._id} value={sortItem._id}>

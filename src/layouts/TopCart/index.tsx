@@ -75,7 +75,7 @@ const TopCart = ({ showCart, handleCloseTopCart }: ITopCartProps) => {
         closeButton
         closeVariant={isLightTheme ? undefined : "white"}>
         <Offcanvas.Title className="top-cart-title">
-          {`${t("title.cart")}: ${totalInCart.quantity} ${t("title.item")}`}
+          {`${t("title.cart")}: ${totalInCart?.quantity} ${t("title.item")}`}
         </Offcanvas.Title>
       </Offcanvas.Header>
 
@@ -100,7 +100,7 @@ const TopCart = ({ showCart, handleCloseTopCart }: ITopCartProps) => {
         <Button
           className="top-cart-btn custom-btn"
           onClick={handleCheckoutClick}>
-          {`${t("title.checkout")} (${totalInCart.price.toLocaleString()}đ)`}
+          {`${t("title.checkout")} (${totalInCart?.price?.toLocaleString()}đ)`}
         </Button>
         <Button
           className="top-cart-btn custom-btn bg-fill"

@@ -39,12 +39,12 @@ const DetailProductPage = () => {
   // handle add to cart click
   function handleAddToCartClick() {
     const newCartProduct: ICartProduct = {
-      _id: currentProduct._id,
-      name: currentProduct.name,
-      image: currentProduct.image,
-      createdAt: currentProduct.createdAt,
-      updatedAt: currentProduct.updatedAt,
-      price: currentProduct.price,
+      _id: currentProduct?._id!,
+      name: currentProduct?.name!,
+      image: currentProduct?.image!,
+      createdAt: currentProduct?.createdAt!,
+      updatedAt: currentProduct?.updatedAt!,
+      price: currentProduct?.price!,
       quantity: 1,
     };
     dispatch(addToCart(newCartProduct));
@@ -81,7 +81,7 @@ const DetailProductPage = () => {
             <div className="product-img__wrap">
               <img
                 src={
-                  getFullPathMedia(currentProduct.image) || Media.errorLoading
+                  getFullPathMedia(currentProduct?.image) || Media.errorLoading
                 }
                 alt=""
               />
@@ -90,9 +90,9 @@ const DetailProductPage = () => {
 
           <Col md="6">
             <div className="product-detail-infor">
-              <h2 className="product-title">{currentProduct.name}</h2>
+              <h2 className="product-title">{currentProduct?.name}</h2>
               <div className="product-price">
-                <span>{currentProduct.price}đ</span>
+                <span>{currentProduct?.price}đ</span>
               </div>
 
               <div className="btn-wrap">
@@ -112,11 +112,11 @@ const DetailProductPage = () => {
                 className="product-desc"
                 style={{ borderColor: style.borderColor }}>
                 <h3 className="product-desc-title">Thông tin sản phẩm</h3>
-                {/* <span className="detail">{currentProduct.description}</span> */}
+                {/* <span className="detail">{currentProduct?.description}</span> */}
                 <div
                   className="detail"
                   dangerouslySetInnerHTML={{
-                    __html: currentProduct.description,
+                    __html: currentProduct?.description!,
                   }}></div>
               </div>
             </div>

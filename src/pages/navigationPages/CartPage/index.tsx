@@ -118,7 +118,7 @@ const CartPage = () => {
                       "title.quantity"
                     )}:`}</span>
                     <span className="total-value">
-                      {`${totalInCart.quantity} ${t("title.item")}`}
+                      {`${totalInCart?.quantity} ${t("title.item")}`}
                     </span>
                   </div>
 
@@ -127,7 +127,7 @@ const CartPage = () => {
                       "title.totalPrice"
                     )}:`}</span>
                     <span className="total-value">
-                      {`${totalInCart.price.toLocaleString()}đ`}
+                      {`${totalInCart?.price?.toLocaleString()}đ`}
                     </span>
                   </div>
                 </div>

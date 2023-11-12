@@ -77,7 +77,7 @@ const CustomerInFoPage = () => {
 
         paymentMethod: EPaymentMethod.COD,
       };
-      if (totalInCart.quantity <= 0) {
+      if ((totalInCart?.quantity as number) <= 0) {
         toast.warning(t("message.noProductInCart"));
       } else {
         await dispatch(addOrderMethod(order)).unwrap();
@@ -190,7 +190,7 @@ const CustomerInFoPage = () => {
                         "title.quantity"
                       )}:`}</span>
                       <span className="total-value">
-                        {`${totalInCart.quantity} ${t("title.item")}`}
+                        {`${totalInCart?.quantity} ${t("title.item")}`}
                       </span>
                     </div>
 
@@ -199,7 +199,7 @@ const CustomerInFoPage = () => {
                         "title.totalPrice"
                       )}:`}</span>
                       <span className="total-value">
-                        {`${totalInCart.price.toLocaleString()}đ`}
+                        {`${totalInCart?.price?.toLocaleString()}đ`}
                       </span>
                     </div>
                   </div>
