@@ -123,7 +123,7 @@ const CustomerInFoPage = () => {
                         color: style.color,
                       }}
                       type="text"
-                      placeholder="Full name"
+                      placeholder="Họ tên"
                       {...form.register("fullName")}
                     />
                     <Form.Text className="text-danger">
@@ -139,7 +139,7 @@ const CustomerInFoPage = () => {
                         color: style.color,
                       }}
                       type="text"
-                      placeholder="Phone number"
+                      placeholder="Số điện thoại"
                       {...form.register("phoneNumber")}
                     />
                     <Form.Text className="text-danger">
@@ -155,7 +155,7 @@ const CustomerInFoPage = () => {
                         color: style.color,
                       }}
                       type="text"
-                      placeholder="Address"
+                      placeholder="Địa chỉ"
                       {...form.register("address")}
                     />
                     <Form.Text className="text-danger">

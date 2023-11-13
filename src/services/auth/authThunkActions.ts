@@ -56,7 +56,7 @@ export const updateProfileMethod = createAsyncThunk(
   async (data: any, thunkApi) => {
     try {
       const response = await repositories.auth.patch(data, "profile");
-      console.log("response profile", response);
+
       return response.data;
     } catch (err) {
       const error = err as AxiosError<ILoginResponseError>;

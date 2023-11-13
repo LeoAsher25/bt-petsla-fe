@@ -45,23 +45,18 @@ const userSlice = createSlice({
     },
 
     setCurrentUser: (state, action: PayloadAction<IUser | null>) => {
-      state.currentUser = action.payload;
-      const newCurrentOrderInfo: IOrderInfo = {
-        _id: state.currentUser?._id as string,
-        fullName: String(
-          `${state.currentUser?.firstName || ""} ${
-            state.currentUser?.lastName || ""
-          }`
-        ).trim(),
-        address: state.currentUser?.address || "",
-        phoneNumber: state.currentUser?.phoneNumber || "",
-        note: state.currentOrderInfo?.note,
-      };
+      state.currentUser = JSON.parse(JSON.stringify(action.payload));
 
-      action.payload === null
-        ? removeLocalStorage("currentUser")
-        : setLocalStorage("currentUser", action.payload);
-      setLocalStorage("currentOrderInfo", newCurrentOrderInfo);
+      if (action.payload === null) {
+        removeLocalStorage("currentUser");
+        removeLocalStorage("currentOrderInfo");
+      } else {
+        setLocalStorage("currentUser", action.payload);
+      }
+    },
+
+    setItem(state, action) {
+      Object.assign(state, action.payload);
     },
   },
   extraReducers: (builder) => {
@@ -113,7 +108,7 @@ const userSlice = createSlice({
 
       .addCase(getOneOrderMethod.fulfilled, (state, action) => {
         state.requestStatus = ERequestStatus.FULFILLED;
-        console.log("getOneOrderMethod: ", action.payload);
+
         state.currentOrder = action.payload;
       })
 
@@ -124,4 +119,5 @@ const userSlice = createSlice({
 });
 
 export const userReducer = userSlice.reducer;
-export const { setCurrentCustomerInfo, setCurrentUser } = userSlice.actions;
+export const { setCurrentCustomerInfo, setCurrentUser, setItem } =
+  userSlice.actions;

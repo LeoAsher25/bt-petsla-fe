@@ -78,7 +78,7 @@ const CartPage = () => {
         <Row>
           <Col xs="12" md="7" lg="8">
             <Card style={{ backgroundColor: style.backgroundColor }}>
-              <Card.Header className="cart-page-header">Cart</Card.Header>
+              <Card.Header className="cart-page-header">Giỏ hàng</Card.Header>
               <Card.Body>
                 {cartList.length === 0 ? (
                   <NoItems message={t("message.warning.noProductInCart")} />

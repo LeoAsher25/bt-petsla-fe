@@ -32,7 +32,7 @@ const CheckoutSteps = ({ pathname }: ICheckoutStepsProps) => {
         active={pathname === ERouterPath.CART}
         linkAs={Link}
         linkProps={{ to: ERouterPath.CART }}>
-        Cart
+        Giỏ hàng
       </Breadcrumb.Item>
       <Breadcrumb.Item
         className="checkout-step"
@@ -43,7 +43,7 @@ const CheckoutSteps = ({ pathname }: ICheckoutStepsProps) => {
           to:
             Number(totalInCart?.quantity) <= 0 ? "" : ERouterPath.CUSTOMER_INFO,
         }}>
-        Customer Info
+        Thông tin giao hàng
       </Breadcrumb.Item>
       {/* <Breadcrumb.Item
         active={pathname === ERouterPath.PAYMENT}

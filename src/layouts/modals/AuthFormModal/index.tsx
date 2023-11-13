@@ -85,7 +85,7 @@ const AuthFormModal = ({
 
         {modalType === EModalType.LOGIN && (
           <div className="forgot-password change-modal-item">
-            Forgot password?
+            Quên mật khẩu?
           </div>
         )}
       </div>

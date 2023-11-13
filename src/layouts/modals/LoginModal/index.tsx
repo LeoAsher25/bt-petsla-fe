@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Form, Modal } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import AuthFormModal from "src/layouts/modals/AuthFormModal";
 import {
   getProfileMethod,
@@ -25,6 +25,7 @@ import * as yup from "yup";
 import "./LoginModal.scss";
 import { handleError } from "src/utils/handleError";
 import { toast } from "react-toastify";
+import { ERouterPath } from "src/types/route";
 
 const LoginModal = () => {
   const defaultValues: ILoginRequestData = {
@@ -66,6 +67,7 @@ const LoginModal = () => {
 
   const dispatch: AppDispatch = useAppDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const { loginModalIsOpen } = useAppSelector(
     (state: RootState) => state.modalState
   );
@@ -86,8 +88,14 @@ const LoginModal = () => {
   const handleClose = useCallback(() => {
     dispatch(setLoginModalIsOpen(false));
     form.reset();
-    navigate(-1);
-  }, [dispatch, navigate, form]);
+    if (
+      ![ERouterPath.SHOP, ERouterPath.SHOP_COMBO, ERouterPath.HOME].includes(
+        location.pathname as ERouterPath
+      )
+    ) {
+      navigate(-1);
+    }
+  }, [dispatch, navigate, form, location]);
 
   const handleChangeToRegister = () => {
     form.reset();

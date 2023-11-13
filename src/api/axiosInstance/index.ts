@@ -76,8 +76,6 @@ async function handleRepositoryError(error: any) {
 
         return axios(originalConfig);
       } catch (error) {
-        console.log("test", error);
-
         return Promise.reject<IErrorResponse>(error as IErrorResponse);
       }
     }

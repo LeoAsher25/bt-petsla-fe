@@ -1,32 +1,27 @@
-import React from "react";
 import { Container } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 import StyledLink from "src/components/customComponents/StyledLink";
-import ChangeLangPopOver from "src/layouts/modals/ChangeLangPopOver";
 import { authActions } from "src/services/auth/authSlice";
 import { setLoginModalIsOpen } from "src/services/modal/modalSlice";
 import { toggleTheme } from "src/services/theme/ThemeSlice";
-import {
-  setCurrentCustomerInfo,
-  setCurrentUser,
-} from "src/services/user/userSlice";
+import { setCurrentCustomerInfo } from "src/services/user/userSlice";
 import { RootState } from "src/stores/rootReducer";
 import { ERouterPath } from "src/types/route";
+import Media from "src/utils/Media";
 import {
   useAppDispatch,
   useAppSelector,
 } from "src/utils/hook.ts/customReduxHook";
-import Media from "src/utils/Media";
 import "./HigherTopNav.scss";
-import { toast } from "react-toastify";
 
 const HigherTopNav = () => {
   const { themeState, authState } = useAppSelector((state: RootState) => state);
 
   const { t } = useTranslation();
 
-  const { style, isLightTheme } = themeState;
-  const { accessToken } = authState;
+  const { style } = themeState;
+  const { currentUser } = authState;
 
   const dispatch = useAppDispatch();
 
@@ -41,7 +36,7 @@ const HigherTopNav = () => {
 
   const handleLogoutClick = () => {
     dispatch(setCurrentCustomerInfo(null));
-    dispatch(setCurrentUser(null));
+
     dispatch(authActions.logoutMethod());
     toast.success("Đăng xuất thành công");
   };
@@ -78,7 +73,7 @@ const HigherTopNav = () => {
           </div>
 
           <div className="btn-wrap">
-            <div className="higher-top-nav-item language-wrap">
+            {/* <div className="higher-top-nav-item language-wrap">
               <ChangeLangPopOver />
               <div
                 className="higher-top-nav-item__title"
@@ -106,11 +101,12 @@ const HigherTopNav = () => {
                 }}>
                 {t("title.toggleTheme")}
               </div>
-            </div>
+            </div> */}
 
-            <div className="auth-btn__wrap higher-top-nav-item">
-              {accessToken ? (
-                <>
+            {currentUser ? (
+              <div className="d-flex align-items-center gap-2">
+                <span>{currentUser.fullName}</span>
+                <div className="auth-btn__wrap higher-top-nav-item mx-0">
                   <i
                     onClick={handleLogoutClick}
                     className="bi bi-box-arrow-right"></i>
@@ -122,23 +118,24 @@ const HigherTopNav = () => {
                     }}>
                     {t("title.logout")}
                   </div>
-                </>
-              ) : (
-                <>
-                  <i
-                    onClick={handleLoginClick}
-                    className="bi bi-box-arrow-in-left"></i>
-                  <div
-                    className="higher-top-nav-item__title"
-                    style={{
-                      backgroundColor: style.colorBlur,
-                      color: style.backgroundColor,
-                    }}>
-                    {t("title.login")}
-                  </div>
-                </>
-              )}
-            </div>
+                </div>
+              </div>
+            ) : (
+              <div
+                onClick={handleLoginClick}
+                className="auth-btn__wrap higher-top-nav-item d-flex align-items-center mx-0 gap-2">
+                <span>Đăng nhập</span>
+                <i className="bi bi-box-arrow-in-left"></i>
+                {/* <div
+                  className="higher-top-nav-item__title"
+                  style={{
+                    backgroundColor: style.colorBlur,
+                    color: style.backgroundColor,
+                  }}>
+                  {t("title.login")}
+                </div> */}
+              </div>
+            )}
           </div>
         </div>
       </Container>

@@ -41,7 +41,6 @@ const TopNav = () => {
 
   const handleCloseTopCart = () => {
     setShowCart(false);
-    console.log("first");
   };
 
   const handleSearch = (event: ChangeEvent<HTMLFormElement>) => {
@@ -90,7 +89,7 @@ const TopNav = () => {
                 onChange={(event: ChangeEvent<HTMLInputElement>) =>
                   handleSearchTermChange(event.target.value)
                 }
-                placeholder="We only have cuties here"
+                placeholder="Tìm kiếm theo tên sản phẩm"
               />
               <Button className="search-btn custom-btn bg-fill" type="submit">
                 <i className="bi bi-search"></i>

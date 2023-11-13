@@ -87,11 +87,7 @@ const ProfilePage = () => {
       try {
         const payload = form.getValues();
         payload.gender = Number(payload.gender);
-        console.log(
-          "payload: ",
-          payload,
-          EGender[Number(payload?.gender) || -1]
-        );
+
         await dispatch(updateProfileMethod(payload)).unwrap();
         form.reset({
           ...payload,
@@ -114,9 +110,7 @@ const ProfilePage = () => {
     form.setValue("gender", Number(event.target.value) as EGender);
   };
 
-  const handleChangeInputAvatar = (event: ChangeEvent<HTMLInputElement>) => {
-    console.log("event: ", event);
-  };
+  const handleChangeInputAvatar = (event: ChangeEvent<HTMLInputElement>) => {};
 
   const getGender = (value: any) => {
     switch (Number(value)) {

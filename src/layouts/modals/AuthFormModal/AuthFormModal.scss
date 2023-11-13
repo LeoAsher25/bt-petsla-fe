@@ -1,4 +1,4 @@
-@import 'src/variable.scss';
+@import "src/variable.scss";
 
 .auth-form-modal {
   .auth-modal-header {
@@ -65,6 +65,7 @@
 
       &:hover {
         opacity: 0.9;
+        color: $primary-color;
       }
     }
   }
