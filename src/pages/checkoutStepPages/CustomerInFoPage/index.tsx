@@ -84,7 +84,7 @@ const CustomerInFoPage = () => {
         await dispatch(addOrderMethod(order)).unwrap();
         toast.success("Đặt hàng thành công");
         dispatch(clearCart());
-        navigate(ERouterPath.SHOP);
+        navigate(`${ERouterPath.ACCOUNT}/${ERouterPath.ORDERS}`);
       }
     } catch (error) {
       handleError(error);

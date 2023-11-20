@@ -36,6 +36,11 @@
       .order-address {
         flex: 1;
         text-align: left;
+
+        -webkit-line-clamp: 1;
+        display: -webkit-box;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
       }
 
       .order-price {

@@ -1,9 +1,9 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { setLoginModalIsOpen } from "src/services/modal/modalSlice";
-import { addToCart } from "src/services/product/productSlice";
+import { addToCart, setItem } from "src/services/product/productSlice";
 import { RootState } from "src/stores/rootReducer";
 import { ICartProduct, IProduct } from "src/types/productTypes";
 import { ERouterPath } from "src/types/route";
@@ -27,6 +27,8 @@ const ProductItem = (props: any) => {
   const { accessToken } = authState;
   const { style } = themeState;
 
+  const navigate = useNavigate();
+
   const dispatch = useAppDispatch();
 
   function handleAddToCartClick(product: IProduct) {
@@ -43,9 +45,15 @@ const ProductItem = (props: any) => {
     toast.success(t("message.success.addToCart"));
   }
 
-  const handleBuyNowOnClick = () => {
+  const handleBuyNowOnClick = (product: IProduct) => {
     if (accessToken) {
-      toast.success(t("message.success.checkout"));
+      // toast.success(t("message.success.checkout"));
+      dispatch(
+        setItem({
+          currentProduct: product,
+        })
+      );
+      navigate(ERouterPath.CUSTOMER_INFO);
     } else {
       toast.warn(t("message.warning.loginFirst"));
       dispatch(setLoginModalIsOpen(true));
@@ -86,16 +94,16 @@ const ProductItem = (props: any) => {
           <div className="buy-cart-wrap">
             <div
               className="buy button-wrap"
-              onClick={() => handleBuyNowOnClick()}>
+              onClick={() => handleBuyNowOnClick(product)}>
               <i className="bi bi-bag  d-none d-md-block"></i>
-              <span>Buy now</span>
+              <span>Mua ngay</span>
             </div>
 
             <div
               className="cart button-wrap"
               onClick={() => handleAddToCartClick(product)}>
               <i className="bi bi-cart3"></i>
-              <span className=" d-none d-xl-block">Add to Cart</span>
+              <span className=" d-none d-xl-block">Thêm vào giỏ</span>
             </div>
           </div>
         </div>

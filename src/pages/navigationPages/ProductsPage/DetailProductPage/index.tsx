@@ -99,12 +99,12 @@ const DetailProductPage = () => {
                 <Button
                   className="btn-item custom-btn "
                   onClick={() => handleBuyNowOnClick()}>
-                  <span className="">Buy Now</span>
+                  <span className="">Mua ngay</span>
                 </Button>
                 <Button
                   className="btn-item custom-btn bg-fill"
                   onClick={() => handleAddToCartClick()}>
-                  <span className="">Add to Cart</span>
+                  <span className="">Thêm vào giỏ</span>
                 </Button>
               </div>
 
