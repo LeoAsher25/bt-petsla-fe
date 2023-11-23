@@ -76,22 +76,24 @@ html {
   }
 }
 
-.btn.custom-btn {
+.btn {
   white-space: nowrap;
 
-  user-select: none;
-  border: 1px solid $primary-color;
-  color: $primary-color;
-  transition: color 0.2s background-color 0.3s;
-  background-color: unset;
+  &.custom-btn {
+    user-select: none;
+    border: 1px solid $primary-color;
+    color: $primary-color;
+    transition: color 0.2s background-color 0.3s;
+    background-color: unset;
 
-  padding: toRem(6) toRem(8);
+    padding: toRem(6) toRem(8);
 
-  &:hover,
-  &.bg-fill {
-    background-color: $primary-color;
-    // border-color: $primary-color;
-    color: $white-text-color;
+    &:hover,
+    &.bg-fill {
+      background-color: $primary-color;
+      // border-color: $primary-color;
+      color: $white-text-color;
+    }
   }
 }
 

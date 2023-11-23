@@ -1,6 +1,6 @@
 import moment from "moment";
 import React from "react";
-import { Badge, Card, Col, Row } from "react-bootstrap";
+import { Badge, Button, Card, Col, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import {
   Link,
@@ -14,7 +14,11 @@ import {
   getOneOrderMethod,
 } from "src/services/user/userThunkActions";
 import { RootState } from "src/stores/rootReducer";
-import { IOrderItem, IRequestedOrder } from "src/types/productTypes";
+import {
+  EOrderStatus,
+  IOrderItem,
+  IRequestedOrder,
+} from "src/types/productTypes";
 import { ERouterPath } from "src/types/route";
 import getFullPathMedia from "src/utils/Media/getFullPathMedia";
 import getEnumObject from "src/utils/getEnumObject";
@@ -23,6 +27,9 @@ import {
   useAppSelector,
 } from "src/utils/hook.ts/customReduxHook";
 import "./DetailOrderPage.scss";
+import repositories from "src/api/repositories";
+import { handleError } from "src/utils/handleError";
+import { toast } from "react-toastify";
 
 const DetailOrderPage = () => {
   const { id } = useParams();
@@ -60,6 +67,24 @@ const DetailOrderPage = () => {
     }
   };
 
+  const handleCancelOrder = async () => {
+    if (currentOrder?.orderStatus === EOrderStatus.PENDING) {
+      try {
+        await repositories.order.patch(
+          {
+            orderStatus: EOrderStatus.CANCELLED,
+            paymentStatus: currentOrder.paymentStatus,
+          },
+          currentOrder._id
+        );
+        toast.success("Hủy đơn hàng thành công");
+        dispatch(getOneOrderMethod(id!));
+      } catch (error) {
+        handleError(error);
+      }
+    }
+  };
+
   React.useEffect(() => {
     if (!id) {
       // navigate(ERouterPath.NOT_FOUND);
@@ -71,8 +96,16 @@ const DetailOrderPage = () => {
       <AccountPageHeader
         titleIcon={<i className="bi bi-bag-fill"></i>}
         headerTitle="Chi tiết đơn hàng"
-        setShowDashboard={setShowDashboard}
-      />
+        setShowDashboard={setShowDashboard}>
+        {currentOrder?.orderStatus !== EOrderStatus.CANCELLED && (
+          <Button
+            variant="danger"
+            disabled={currentOrder?.orderStatus !== EOrderStatus.PENDING}
+            onClick={handleCancelOrder}>
+            Hủy đơn
+          </Button>
+        )}
+      </AccountPageHeader>
 
       <div className="detail-order-info ">
         <Row>

@@ -1,6 +1,5 @@
-import React, { HTMLProps, ReactElement, ReactNode } from 'react';
-import { Button } from 'react-bootstrap';
-import './AccountPageHeader.scss';
+import React, { HTMLProps, ReactElement, ReactNode } from "react";
+import "./AccountPageHeader.scss";
 
 interface IAccountPageHeaderProps extends HTMLProps<HTMLDivElement> {
   children?: ReactNode;
@@ -21,28 +20,20 @@ const AccountPageHeader = ({
   ...props
 }: IAccountPageHeaderProps) => {
   return (
-    <div className='account-page-header' {...props}>
-      <div className='title-wrap'>
-        <div className='title'>
+    <div className="account-page-header" {...props}>
+      <div className="title-wrap">
+        <div className="title">
           {titleIcon}
-          <span className='text'>{headerTitle}</span>
+          <span className="text">{headerTitle}</span>
         </div>
         <div
-          className='show-dashboard-btn'
+          className="show-dashboard-btn"
           onClick={() => setShowDashboard(true)}>
-          <i className='bi bi-list'></i>
+          <i className="bi bi-list"></i>
         </div>
       </div>
 
-      <div className='btn-wrap'>
-        {btnTitle && (
-          <Button
-            className='custom-btn account-page-header-btn'
-            onClick={handleBtnClick}>
-            {btnTitle}
-          </Button>
-        )}
-      </div>
+      <div className="btn-wrap">{children}</div>
     </div>
   );
 };
