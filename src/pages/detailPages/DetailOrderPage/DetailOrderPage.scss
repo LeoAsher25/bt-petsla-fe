@@ -9,65 +9,64 @@
       justify-content: space-between;
       padding: toRem(4) 0;
     }
+  }
+  .detail-order-item {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
 
-    .detail-order-item {
-      display: flex;
+    .detail-order-item-link {
+      padding: toRem(16);
+      text-decoration: none;
       width: 100%;
-      justify-content: space-between;
-      align-items: center;
-      margin: 0;
+    }
 
-      .detail-order-item-link {
-        padding: toRem(16);
-        text-decoration: none;
-        width: 100%;
+    &:not(:last-child) {
+      border-bottom: 1px solid rgba(170, 170, 170, 0.6);
+    }
+
+    &:hover {
+      box-shadow: inset toRem(2000) toRem(2000) rgba(0, 0, 0, 0.05);
+    }
+
+    .product-info {
+      display: flex;
+      flex: 1;
+
+      .product-img {
+        width: toRem(72);
+        min-width: toRem(72);
+        padding-top: toRem(72);
+        margin: 0 toRem(16) 0 0;
+        height: 100%;
+        background-size: cover;
       }
 
-      &:not(:last-child) {
-        border-bottom: 1px solid rgba(170, 170, 170, 0.6);
-      }
-
-      &:hover {
-        box-shadow: inset toRem(2000) toRem(2000) rgba(0, 0, 0, 0.05);
-      }
-
-      .product-info {
+      .product-description {
         display: flex;
-        flex: 1;
+        flex-direction: column;
+        justify-content: space-between;
 
-        .product-img {
-          width: toRem(72);
-          min-width: toRem(72);
-          padding-top: toRem(72);
-          margin: 0 toRem(16) 0 0;
-          height: 100%;
-          background-size: cover;
+        .product-name {
+          font-weight: 600;
+          font-size: toRem(16);
+          line-height: toRem(16);
+          display: -webkit-box;
+          overflow: hidden;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 1;
         }
 
-        .product-description {
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
+        .product-price {
+          font-size: toRem(12);
+        }
 
-          .product-name {
-            font-weight: 600;
-            font-size: toRem(16);
-            line-height: toRem(16);
-            display: -webkit-box;
-            overflow: hidden;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 1;
-          }
-
-          .product-price {
-            font-size: toRem(12);
-          }
-
-          .product-total-price {
-            font-size: toRem(14);
-            font-weight: 600;
-            color: $primary-color;
-          }
+        .product-total-price {
+          font-size: toRem(14);
+          font-weight: 600;
+          color: $primary-color;
         }
       }
     }

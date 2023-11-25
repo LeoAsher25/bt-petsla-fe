@@ -61,6 +61,20 @@ export interface IOrder {
   paymentStatus: EPaymentStatus;
   orderItems: IOrderItem[];
   createdAt: string;
+  feedbackList: IFeedback[];
+}
+
+export interface IFeedback {
+  _id?: string;
+  rating?: number;
+  comment?: string;
+  productId?: string;
+  product?: {
+    _id: string;
+    name: string;
+    image: string;
+  };
+  orderId?: string;
 }
 
 export interface IOrderItem {
@@ -70,6 +84,8 @@ export interface IOrderItem {
   image?: string;
   price?: number;
   quantity?: number;
+  rating?: number;
+  comment?: string;
 }
 
 export enum EOrderStatus {

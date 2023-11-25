@@ -1,4 +1,4 @@
-@import 'src/variable';
+@import "src/variable";
 
 .product-item {
   border-radius: toRem(10);
@@ -35,8 +35,9 @@
       }
 
       .price {
+        color: $primary-color;
         font-weight: 700;
-        margin: toRem(5) auto toRem(10);
+        margin: toRem(4) auto toRem(10);
       }
     }
 

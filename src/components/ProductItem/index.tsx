@@ -68,7 +68,7 @@ const ProductItem = (props: any) => {
   return (
     <>
       <div
-        className="product-item  mt-3 shadow-sm"
+        className="product-item mt-3 shadow-sm"
         style={{ backgroundColor: style.backgroundColor }}>
         <Link
           to={`${ERouterPath.PRODUCTS}/${product._id}`}

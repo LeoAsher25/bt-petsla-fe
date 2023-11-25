@@ -55,7 +55,7 @@ const OrdersPages = () => {
     <div className="orders-page">
       <AccountPageHeader
         titleIcon={<i className="bi bi-bag-fill"></i>}
-        headerTitle="My Orders"
+        headerTitle="Danh sách đơn hàng"
         setShowDashboard={setShowDashboard}
       />
 

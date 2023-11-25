@@ -26,7 +26,7 @@ const factories = (axios: AxiosInstance) => (resource: string) => ({
   },
 
   update(payload: any, id: number | string, config: AxiosRequestConfig = {}) {
-    return axios.put(`${resource}/${id}`, payload, config);
+    return axios.patch(`${resource}/${id}`, payload, config);
   },
 
   put(payload: any, url?: string, config: AxiosRequestConfig = {}) {

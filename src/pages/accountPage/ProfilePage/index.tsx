@@ -147,21 +147,19 @@ const ProfilePage = () => {
           <div className="btn-wrap">
             {isEdit ? (
               <div className="d-flex gap-2">
-                <Button
-                  className="custom-btn account-page-header-btn"
-                  onClick={handleEditCancel}>
+                <Button variant="outline-danger" onClick={handleEditCancel}>
                   Hủy
                 </Button>
 
                 <Button
-                  className="custom-btn account-page-header-btn"
+                  className="custom-btn account-page-header-btn bg-fill"
                   onClick={handleEditSaveBtnClick}>
                   Lưu
                 </Button>
               </div>
             ) : (
               <Button
-                className="custom-btn account-page-header-btn"
+                className="custom-btn account-page-header-btn bg-fill"
                 onClick={() => setIsEdit(true)}>
                 Chỉnh sửa
               </Button>

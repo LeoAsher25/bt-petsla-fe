@@ -54,7 +54,7 @@ const getEnumObject = {
         color: "#13c2c2",
       },
       REFUNDED: {
-        text: "Đã thanh toán",
+        text: "Đã hoàn tiền",
         value: 3,
         key: "REFUNDED",
         color: "#722ed1",
