@@ -14,8 +14,9 @@ import {
   useAppSelector,
 } from "src/utils/hook.ts/customReduxHook";
 import "./ProductItem.scss";
+import { setLocalStorage } from "src/utils/localStorage";
 
-const ProductItem = (props: any) => {
+const ProductItem = (props: { product: IProduct }) => {
   const { product } = props;
   const productUrlImg = `url('${
     getFullPathMedia(product.image) || Media.errorLoading
@@ -53,6 +54,7 @@ const ProductItem = (props: any) => {
           currentProduct: product,
         })
       );
+      setLocalStorage("currentProduct", product);
       navigate(ERouterPath.CUSTOMER_INFO);
     } else {
       toast.warn(t("message.warning.loginFirst"));
@@ -68,7 +70,7 @@ const ProductItem = (props: any) => {
   return (
     <>
       <div
-        className="product-item mt-3 shadow-sm"
+        className="product-item mt-3 shadow-sm flex-fill d-flex flex-column"
         style={{ backgroundColor: style.backgroundColor }}>
         <Link
           to={`${ERouterPath.PRODUCTS}/${product._id}`}
@@ -84,14 +86,37 @@ const ProductItem = (props: any) => {
             }}></div>
         </Link>
 
-        <div className="content p-2 p-lg-3">
+        <div
+          className="content p-2 p-lg-3 flex-fill"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "stretch",
+          }}>
           <div className="desc">
             <Link to={`${ERouterPath.PRODUCTS}/${product._id}`}>
               <span className="title">{product.name}</span>
             </Link>
+            {product.rating ? (
+              <div className="d-flex gap-1" style={{ margin: "-4px 0" }}>
+                {[1, 2, 3, 4, 5].map((value) => (
+                  <div key={value} style={{ cursor: "pointer" }}>
+                    <i
+                      className={`bi ${
+                        !product.rating || value > product.rating
+                          ? "bi-star"
+                          : "bi-star-fill"
+                      }`}
+                      style={{ fontSize: 14, color: "#e69646" }}></i>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <></>
+            )}
             <div className="price"> {formatPrice(product.price)}</div>
           </div>
-          <div className="buy-cart-wrap">
+          <div className="buy-cart-wrap w-100 mt-auto">
             <div
               className="buy button-wrap"
               onClick={() => handleBuyNowOnClick(product)}>

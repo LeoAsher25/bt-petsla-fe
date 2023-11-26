@@ -71,11 +71,11 @@ const CartPage = () => {
   return (
     <div className="cart-page">
       <Container className="cart-page-container">
-        <Row>
+        {/* <Row>
           <CheckoutSteps pathname={ERouterPath.CART} />
-        </Row>
+        </Row> */}
 
-        <Row>
+        <Row className="my-5">
           <Col xs="12" md="7" lg="8">
             <Card style={{ backgroundColor: style.backgroundColor }}>
               <Card.Header className="cart-page-header">Giỏ hàng</Card.Header>

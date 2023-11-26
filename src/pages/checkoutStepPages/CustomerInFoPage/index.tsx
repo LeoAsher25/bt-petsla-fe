@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import React, { useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import {
   Button,
   Card,
@@ -13,7 +13,8 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import CheckoutSteps from "src/pages/checkoutStepPages/components/CheckoutSteps";
+import TopCartItem from "src/components/TopCartItem";
+import { clearCart } from "src/services/product/productSlice";
 import { addOrderMethod } from "src/services/user/userThunkActions";
 import { RootState } from "src/stores/rootReducer";
 import { IOrderInfo } from "src/types/authTypes";
@@ -23,20 +24,20 @@ import {
   IRequestedOrder,
 } from "src/types/productTypes";
 import { ERouterPath } from "src/types/route";
+import { handleError } from "src/utils/handleError";
 import {
   useAppDispatch,
   useAppSelector,
 } from "src/utils/hook.ts/customReduxHook";
 import { customerInfoPageSchema } from "src/utils/yup";
+import { resetCurrentProduct } from "src/services/product/productSlice";
 import "./CustomerInFoPage.scss";
-import { handleError } from "src/utils/handleError";
-import { clearCart, setItem } from "src/services/product/productSlice";
 const CustomerInFoPage = () => {
   const { themeState, productState, authState } = useAppSelector(
     (state: RootState) => state
   );
   const { style } = themeState;
-  const { totalInCart, cartList } = productState;
+  const { totalInCart, cartList, currentProduct } = productState;
   const { currentUser } = authState;
 
   const defaultValues: IOrderInfo = useMemo(
@@ -64,13 +65,23 @@ const CustomerInFoPage = () => {
   const handleNext = async () => {
     try {
       const order: IRequestedOrder = {
-        orderItems: cartList.map((product: ICartProduct) => ({
-          productId: product._id,
-          quantity: product.quantity,
-          price: product.price,
-          name: product.name,
-          image: product.image,
-        })),
+        orderItems: currentProduct
+          ? [
+              {
+                productId: currentProduct._id,
+                quantity: 1,
+                price: currentProduct.price,
+                name: currentProduct.name,
+                image: currentProduct.image,
+              },
+            ]
+          : cartList.map((product: ICartProduct) => ({
+              productId: product._id,
+              quantity: product.quantity,
+              price: product.price,
+              name: product.name,
+              image: product.image,
+            })),
         phoneNumber: form.getValues("phoneNumber")!,
         address: form.getValues("address")!,
         note: form.getValues("note")!,
@@ -78,7 +89,7 @@ const CustomerInFoPage = () => {
 
         paymentMethod: EPaymentMethod.COD,
       };
-      if ((totalInCart?.quantity as number) <= 0) {
+      if (!currentProduct && (totalInCart?.quantity as number) <= 0) {
         toast.warning(t("message.noProductInCart"));
       } else {
         await dispatch(addOrderMethod(order)).unwrap();
@@ -95,14 +106,20 @@ const CustomerInFoPage = () => {
     form.reset(defaultValues);
   }, [form, defaultValues]);
 
+  useEffect(() => {
+    return () => {
+      dispatch(resetCurrentProduct());
+    };
+  }, [dispatch, currentProduct]);
+
   return (
     <div className="cart-page">
       <Container className="cart-page-container">
-        <Row>
+        {/* <Row>
           <CheckoutSteps pathname={ERouterPath.CUSTOMER_INFO} />
-        </Row>
+        </Row> */}
 
-        <Form onSubmit={form.handleSubmit(handleNext)}>
+        <Form className="my-5" onSubmit={form.handleSubmit(handleNext)}>
           <Row>
             <Col xs="12" md="7" lg="8">
               <Card
@@ -184,16 +201,18 @@ const CustomerInFoPage = () => {
             <Col xs="12" md="5" lg="4">
               <Card
                 style={{
-                  backgroundColor: style.backgroundColor1,
+                  backgroundColor: style.backgroundColor,
                 }}>
                 <div className="cart-page-content">
-                  <div className="header">
+                  <div className="header" style={{ marginBottom: 0 }}>
                     <div className="header-wrap">
                       <span className="total-title">{`${t(
                         "title.quantity"
                       )}:`}</span>
                       <span className="total-value">
-                        {`${totalInCart?.quantity} ${t("title.item")}`}
+                        {`${currentProduct ? 1 : totalInCart?.quantity} ${t(
+                          "title.item"
+                        )}`}
                       </span>
                     </div>
 
@@ -202,9 +221,32 @@ const CustomerInFoPage = () => {
                         "title.totalPrice"
                       )}:`}</span>
                       <span className="total-value">
-                        {`${totalInCart?.price?.toLocaleString()}đ`}
+                        {`${
+                          currentProduct
+                            ? Number(currentProduct.price)?.toLocaleString()
+                            : totalInCart?.price?.toLocaleString()
+                        }đ`}
                       </span>
                     </div>
+                  </div>
+
+                  <div className="cart-page-list">
+                    {currentProduct ? (
+                      <TopCartItem
+                        product={
+                          { ...currentProduct, quantity: 1 } as ICartProduct
+                        }
+                        isReviewing={true}
+                      />
+                    ) : (
+                      cartList.map((product: ICartProduct) => (
+                        <TopCartItem
+                          key={product._id}
+                          product={product}
+                          isReviewing={true}
+                        />
+                      ))
+                    )}
                   </div>
 
                   <div className="shop-note-wrap">

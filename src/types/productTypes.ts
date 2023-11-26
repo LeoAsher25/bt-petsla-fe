@@ -11,6 +11,7 @@ export interface IProduct {
   usesTypes: IProductCategory[];
   petType: IProductCategory;
   isSpecial: boolean;
+  rating?: number;
 }
 
 export interface ICartProduct {

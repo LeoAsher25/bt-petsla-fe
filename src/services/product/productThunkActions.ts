@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError, AxiosRequestConfig } from "axios";
 import repositories from "src/api/repositories";
 import { ILoginResponseError } from "src/types/authTypes";
+import { IProduct } from "src/types/productTypes";
 
 export const getAllProductMethod = createAsyncThunk(
   "product/getAllProductMethod",
@@ -21,7 +22,7 @@ export const getOneProductMethod = createAsyncThunk(
   async (id: string | string, thunkApi) => {
     try {
       const response = await repositories.product.getOne(id);
-      return response;
+      return response.data as IProduct;
     } catch (err) {
       const error = err as AxiosError<ILoginResponseError>;
       return thunkApi.rejectWithValue(error.response);

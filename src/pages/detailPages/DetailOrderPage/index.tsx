@@ -23,6 +23,7 @@ import {
   useAppSelector,
 } from "src/utils/hook.ts/customReduxHook";
 import "./DetailOrderPage.scss";
+import Media from "src/utils/Media";
 
 const DetailOrderPage = () => {
   const { id } = useParams();
@@ -31,6 +32,8 @@ const DetailOrderPage = () => {
   const { setShowDashboard } = useOutletContext<{
     setShowDashboard: React.Dispatch<React.SetStateAction<boolean>>;
   }>();
+
+  const [showCancelOrder, setShowCancelOrder] = useState(false);
 
   const { userState, themeState } = useAppSelector((state: RootState) => state);
   const { currentOrder } = userState;
@@ -54,6 +57,7 @@ const DetailOrderPage = () => {
         );
         toast.success("Hủy đơn hàng thành công");
         dispatch(getOneOrderMethod(id!));
+        setShowCancelOrder(false);
       } catch (error) {
         handleError(error);
       }
@@ -91,6 +95,12 @@ const DetailOrderPage = () => {
           }
         })
       );
+      if (!isSentfeedback) {
+        toast.success("Gửi đánh giá thành công");
+        dispatch(getOneOrderMethod(id!));
+      } else {
+        toast.success("Cập nhật đánh giá thành công");
+      }
       handleFeedbackCancel();
     } catch (error) {
       handleError(error);
@@ -143,8 +153,9 @@ const DetailOrderPage = () => {
               ({
                 rating: undefined,
                 comment: undefined,
-                product: item,
+                product: { ...item, _id: item.productId },
                 order: currentOrder._id,
+                _id: item.productId,
               } as IFeedback)
           ) || []
     );
@@ -160,7 +171,9 @@ const DetailOrderPage = () => {
           <Button
             variant="outline-danger"
             disabled={currentOrder?.orderStatus !== EOrderStatus.PENDING}
-            onClick={handleCancelOrder}>
+            onClick={() => {
+              setShowCancelOrder(true);
+            }}>
             Hủy đơn
           </Button>
         ) : currentOrder?.orderStatus === EOrderStatus.DELIVERED ? (
@@ -356,7 +369,7 @@ const DetailOrderPage = () => {
         <Modal.Body>
           {feedbackList.map((feedbackItem: IFeedback) => (
             <div
-              key={feedbackItem._id}
+              key={feedbackItem.product?._id}
               className="detail-order-item mb-4"
               style={
                 {
@@ -428,6 +441,41 @@ const DetailOrderPage = () => {
             {Number(currentOrder?.feedbackList?.length) > 0
               ? "Cập nhật đánh giá"
               : "Gửi đánh giá"}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal
+        show={showCancelOrder}
+        centered
+        onHide={() => {
+          setShowCancelOrder(false);
+        }}>
+        <Modal.Header closeButton>
+          <Modal.Title>Hủy đơn hàng</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="d-flex flex-column align-items-center">
+            <img
+              className="no-products-img"
+              srcSet={Media.cancelOrder}
+              alt=""
+            />
+            <span>Bạn có chắc sẽ hủy đơn hàng này không?</span>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="outline-danger"
+            onClick={() => {
+              setShowCancelOrder(false);
+            }}>
+            Không
+          </Button>
+          <Button
+            className="cart-page-btn checkout-btn custom-btn bg-fill"
+            onClick={handleCancelOrder}>
+            Xác nhận
           </Button>
         </Modal.Footer>
       </Modal>

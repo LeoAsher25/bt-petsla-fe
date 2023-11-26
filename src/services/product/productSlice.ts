@@ -6,7 +6,7 @@ import {
 } from "src/services/product/productThunkActions";
 import { ERequestStatus } from "src/types/commonType";
 import { ICartProduct, IProduct } from "src/types/productTypes";
-import { getLocalStorage } from "src/utils/localStorage";
+import { getLocalStorage, removeLocalStorage } from "src/utils/localStorage";
 import { setLocalStorage } from "./../../utils/localStorage";
 
 interface IInitialState {
@@ -42,11 +42,11 @@ const calculateTotalInCart = (cartList: ICartProduct[]): ITotalInCart => {
 
 const initialState: IInitialState = {
   productList: [],
-  currentProduct: undefined,
+  currentProduct: getLocalStorage("currentProduct"),
   cartList: getLocalStorage("cartList") || [],
   totalInCart: {
     quantity: calculateTotalInCart(getLocalStorage("cartList") || []).quantity,
-    price: calculateTotalInCart(getLocalStorage("cartList") || []).quantity,
+    price: calculateTotalInCart(getLocalStorage("cartList") || []).price,
   },
   requestStatus: ERequestStatus.FULFILLED,
 };
@@ -122,6 +122,7 @@ const productSlice = createSlice({
 
     resetCurrentProduct: (state) => {
       state.currentProduct = undefined;
+      removeLocalStorage("currentProduct");
     },
   },
   extraReducers: (builder) => {
@@ -136,20 +137,6 @@ const productSlice = createSlice({
       })
 
       .addCase(getAllProductMethod.rejected, (state, action) => {
-        state.requestStatus = ERequestStatus.REJECTED;
-      })
-
-      .addCase(getOneProductMethod.pending, (state, action) => {
-        state.requestStatus = ERequestStatus.PENDING;
-      })
-
-      .addCase(getOneProductMethod.fulfilled, (state, action) => {
-        state.currentProduct = action.payload.data;
-        state.requestStatus = ERequestStatus.FULFILLED;
-      })
-
-      .addCase(getOneProductMethod.rejected, (state, action) => {
-        toast.error("Get product fail!");
         state.requestStatus = ERequestStatus.REJECTED;
       });
   },
