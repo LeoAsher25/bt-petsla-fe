@@ -100,7 +100,7 @@ const ProductItem = (props: { product: IProduct }) => {
             {product.rating ? (
               <div className="d-flex gap-1" style={{ margin: "-4px 0" }}>
                 {[1, 2, 3, 4, 5].map((value) => (
-                  <div key={value} style={{ cursor: "pointer" }}>
+                  <div key={value}>
                     <i
                       className={`bi ${
                         !product.rating || value > product.rating

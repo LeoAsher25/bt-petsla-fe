@@ -9,6 +9,7 @@ import {
   handleMinus,
   handlePlus,
   removeFromCart,
+  resetCurrentProduct,
 } from "src/services/product/productSlice";
 import { RootState } from "src/stores/rootReducer";
 import { ERouterPath } from "src/types/route";
@@ -59,6 +60,7 @@ const TopCart = ({ showCart, handleCloseTopCart }: ITopCartProps) => {
       toast.warning(t("message.warning.noProductInCart"));
     } else {
       handleCloseTopCart();
+      dispatch(resetCurrentProduct());
       navigate(ERouterPath.CUSTOMER_INFO);
     }
   };

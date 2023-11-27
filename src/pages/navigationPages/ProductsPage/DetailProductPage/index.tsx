@@ -107,7 +107,7 @@ const DetailProductPage = () => {
               {detailProduct?.rating ? (
                 <div className="d-flex gap-1" style={{ margin: "-4px 0 0" }}>
                   {[1, 2, 3, 4, 5].map((value) => (
-                    <div key={value} style={{ cursor: "pointer" }}>
+                    <div key={value}>
                       <i
                         className={`bi ${
                           !detailProduct?.rating ||

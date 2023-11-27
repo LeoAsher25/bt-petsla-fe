@@ -29,8 +29,8 @@ import { ERouterPath } from "src/types/route";
 
 const LoginModal = () => {
   const defaultValues: ILoginRequestData = {
-    email: "test@gmail.com",
-    password: "Test123@",
+    email: "leoasher2507@gmail.com",
+    password: "123qweA@",
   };
 
   const { t } = useTranslation();
