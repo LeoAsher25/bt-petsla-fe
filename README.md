@@ -5,7 +5,7 @@
 ## Clone ứng dụng
 
 ```bash
-git clone https://github.com/LeoAsher25/bt-petsla-be.git
+git clone https://github.com/LeoAsher25/bt-petsla-fe.git
 ```
 
 Sau đó tải các thư viện phụ thuộc (cần để chạy)
